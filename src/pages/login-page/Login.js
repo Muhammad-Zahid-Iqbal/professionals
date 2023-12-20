@@ -7,6 +7,7 @@ import logo from '../../images/darklogo.svg'
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { postRequest } from '../../backendservices/ApiCalls';
 import { LoadingButton } from '@mui/lab';
+import { useMyContext } from '../../components/context-user-data/ContextUserData';
 
 const validationSchema = yup.object({
     email: yup.string('Enter email').email('Invalid email').required('Email is required'),
@@ -18,6 +19,8 @@ const validationSchema = yup.object({
 
 
 const Login = () => {
+    const { setLoginUserData, refreshUserData } = useMyContext();
+
     const [isSubmitted, setIsSubmitted] = useState(false);
     const navigate = useNavigate();
 
@@ -35,6 +38,10 @@ const Login = () => {
                     console.log("data added successfully");
                     resetForm();
                     setIsSubmitted(true);
+                     // Set the user data in the context
+                    setLoginUserData(response?.data?.user);
+                    // Refresh user data (optional)
+                    refreshUserData();
                     setTimeout(() => {
                         setIsSubmitted(false);
                         navigate("/dash-board", {state:{useremail:data.email}});

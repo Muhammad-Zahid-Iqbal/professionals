@@ -12,6 +12,7 @@ import { InputAdornment, MenuItem, Select, Typography } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import yourlogo from "../../images/yourlogo.png";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -42,7 +43,7 @@ export default function Footer() {
             <Grid container spacing={2}>
                 <Grid item sm={3}>
                     <Div>
-                        <img style={{ paddingLeft: "25px" }} src={demofooter} alt='footer image' />
+                        <img style={{ paddingLeft: "25px" }} src={yourlogo} alt='footer image' />
                         <Div sx={{ display: "flex", mt: 5, pl: 2.9 }}>
                             <EmailIcon style={{ color: '#ff7531' }} />
                             <p style={{ paddingLeft: 10, color: '#ff7531' }}>Make an enquiry</p>

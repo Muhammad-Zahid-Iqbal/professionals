@@ -1,17 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
 import * as Yup from "yup";
-import {Grid,TextField,Button,Box, Typography, FormHelperText, IconButton, Avatar, Select, InputAdornment, MenuItem, InputLabel, FormControl,} from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Button,
+  Box,
+  Typography,
+  FormHelperText,
+  IconButton,
+  Avatar,
+  Select,
+  InputAdornment,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { authUserData, postRequest } from "../../backendservices/ApiCalls";
 import { useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { useMyContext } from "../../components/vertical-default/VerticalDefault";
+import { useMyContext } from "../../components/context-user-data/ContextUserData";
 import Editor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Alertdialog from "../../components/AlertDiaolog/Alertdialog";
 import Div from "../../shared/Div";
+import CopyLink from "./CopyLink";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
@@ -26,7 +41,15 @@ const Dashboard = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [ckeditorContent, setCkeditorContent] = useState("");
   const [open, setOpen] = React.useState(false);
-  const {loginUserData,setLoginUserData,getUserData,loading,refreshUserData,} = useMyContext();
+  const [load, setLoad] = React.useState(true);
+ 
+  const {
+    loginUserData,
+    setLoginUserData,
+    getUserData,
+    loading,
+    refreshUserData,
+  } = useMyContext();
   const rowData = loginUserData;
   console.log("rowData", rowData);
   const [selectedLocation, setSelectedLocation] = React.useState();
@@ -37,6 +60,7 @@ const Dashboard = () => {
   console.log("useremail", useremail);
   useEffect(() => {
     refreshUserData();
+    setLoad(false);
   }, []);
   const handleChangeSelect = (event) => {
     setSelectedLocation(event.target.value);
@@ -44,6 +68,7 @@ const Dashboard = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -54,7 +79,9 @@ const Dashboard = () => {
       reader.onloadend = () => {
         const base64Data = reader.result;
         if (base64Data) {
-          localStorage.setItem("selectedImage", base64Data);
+          // localStorage.setItem("selectedImage", base64Data);
+          const userKey = `selectedImage_${useremail}`;
+        localStorage.setItem(userKey, base64Data);
           setSelectedImage(base64Data);
           console.log("Image loaded successfully!", base64Data);
         } else {
@@ -66,7 +93,8 @@ const Dashboard = () => {
     }
   };
   useEffect(() => {
-    const storedImage = localStorage.getItem("selectedImage");
+    const userKey = `selectedImage_${useremail}`;
+  const storedImage = localStorage.getItem(userKey);
     if (storedImage) {
       setSelectedImage(storedImage);
     }
@@ -122,12 +150,15 @@ const Dashboard = () => {
   if (loading && !rowData) {
     return <h1>Loading...</h1>;
   }
+  if (load) {
+    return <h1>Loading...</h1>;
+  }
   if (!loading && rowData) {
     return (
       <>
         <Formik
           initialValues={{
-            image: "",
+            image: selectedImage,
             name: rowData?.firstname || "",
             email: useremail || "",
             education: rowData?.education || "",
@@ -143,6 +174,7 @@ const Dashboard = () => {
         >
           {({ isSubmitting, setFieldValue }) => (
             <Form>
+              <CopyLink/>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} sx={{ margin: "auto" }}>
                   <Div>
@@ -280,7 +312,9 @@ const Dashboard = () => {
                             Type
                           </InputLabel>
                           <Select
-                          inputProps={{MenuProps: {disableScrollLock: true}}}
+                            inputProps={{
+                              MenuProps: { disableScrollLock: true },
+                            }}
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             name="type"

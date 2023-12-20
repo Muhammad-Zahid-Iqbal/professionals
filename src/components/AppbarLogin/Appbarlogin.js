@@ -36,7 +36,7 @@ const Appbarlogin = (props) => {
     const isLoggedIn = localStorage.getItem("token") !== null;
 
     if (isLoggedIn) {
-      localStorage.removeItem("token");
+      localStorage.removeItem("token", null);
     }
 
     navigate("/login");
