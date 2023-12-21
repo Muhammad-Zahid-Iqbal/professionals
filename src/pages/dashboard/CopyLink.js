@@ -3,7 +3,7 @@ import { Button, Grid, Typography, IconButton } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import Div from "../../shared/Div";
 
-const CopyLink = () => {
+const CopyLink = ({userLoginID}) => {
   const [copyMessage, setCopyMessage] = useState("");
   const textRef = useRef(null);
 
@@ -57,7 +57,7 @@ const CopyLink = () => {
 
       <Div style={{ display: "none" }}>
         {/* Hidden text for copying */}
-        <span ref={textRef}>http://localhost:3000/dash-board/</span>
+        <span ref={textRef}>http://localhost:3000/user-review/{userLoginID}</span>
       </Div>
     </Grid>
   );

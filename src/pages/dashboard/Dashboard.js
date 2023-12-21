@@ -34,7 +34,8 @@ const validationSchema = Yup.object({
   education: Yup.string().required("Education is required"),
   phone: Yup.string().required("Phone is required"),
   city: Yup.string().required("City is required"),
-  // detail: Yup.string().required('Detail is required'),
+  address: Yup.string().required('Address is required'),
+  postcode: Yup.number().required('Post Code is required'),
 });
 
 const Dashboard = () => {
@@ -57,6 +58,8 @@ const Dashboard = () => {
   const location = useLocation();
 
   const useremail = location?.state?.useremail;
+  // const userLoginID = location?.state?.userLoginID;
+  // console.log("userLoginID", userLoginID);
   console.log("useremail", useremail);
   useEffect(() => {
     refreshUserData();
@@ -112,6 +115,8 @@ const Dashboard = () => {
       mobile: data.phone,
       city: data.city,
       detail: ckeditorContent,
+      address:data.address,
+      postcode: data.postcode,
     };
     console.log("params", params);
     postRequest(
@@ -166,6 +171,8 @@ const Dashboard = () => {
             phone: rowData?.mobile || "",
             city: rowData?.city || "",
             detail: rowData?.detail || "",
+            address: rowData?.address || "",
+            postcode: rowData?.postcode || "",
           }}
           validationSchema={validationSchema}
           onSubmit={(data, { setSubmitting, resetForm }) => {
@@ -174,7 +181,7 @@ const Dashboard = () => {
         >
           {({ isSubmitting, setFieldValue }) => (
             <Form>
-              <CopyLink/>
+              <CopyLink userLoginID={rowData?.userid}/>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} sx={{ margin: "auto" }}>
                   <Div>
@@ -371,24 +378,49 @@ const Dashboard = () => {
                         />
                       </Box>
                     </Grid>
+
+                    <Grid item sm={6} xs={12}>
+                      <Box>
+                        <Field
+                          id="address"
+                          name="address"
+                          type="text"
+                          as={TextField}
+                          fullWidth
+                          label="Address"
+                          helperText={
+                            <FormHelperText
+                              sx={{ color: "red", m: 0, fontSize: "16px" }}
+                            >
+                              <ErrorMessage name="address" />
+                            </FormHelperText>
+                          }
+                        />
+                      </Box>
+                    </Grid>
+
+                    <Grid item sm={6} xs={12}>
+                      <Box>
+                        <Field
+                          id="postcode"
+                          name="postcode"
+                          type="number"
+                          as={TextField}
+                          fullWidth
+                          label="Post Code"
+                          helperText={
+                            <FormHelperText
+                              sx={{ color: "red", m: 0, fontSize: "16px" }}
+                            >
+                              <ErrorMessage name="postcode" />
+                            </FormHelperText>
+                          }
+                        />
+                      </Box>
+                    </Grid>
                   </Grid>
 
                   <Box mt={1} mb={3} pl={2} pr={2}>
-                    {/* <Field
-                                        id="detail"
-                                        name="detail"
-                                        type="text"
-                                        as={TextField}
-                                        fullWidth
-                                        multiline
-                                        rows={4}
-                                        label="Detail"
-                                        helperText={
-                                            <FormHelperText sx={{ color: 'red', m: 0, fontSize: "16px" }}>
-                                                <ErrorMessage name="detail" />
-                                            </FormHelperText>
-                                        }
-                                    /> */}
                     <CKEditor
                       editor={ClassicEditor}
                       className="ck-editor__editable"

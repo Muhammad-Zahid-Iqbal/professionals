@@ -9,6 +9,9 @@ import Div from '../shared/Div'
 import Dashboard from '../pages/dashboard/Dashboard'
 import Logout from '../pages/logout-page/Logout'
 import UserDetail from '../pages/Counselling-London/UserDetail'
+import CounsellingModal from '../pages/Counselling-London/CounsellingModal'
+import CopyLink from '../pages/dashboard/CopyLink'
+import UserReview from '../pages/Counselling-London/UserReview'
 
 const Routing = () => {
   return (
@@ -22,6 +25,9 @@ const Routing = () => {
         <Route path="/dash-board" element={<Dashboard />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/user-detail/:id" element={<UserDetail />} />
+        <Route path="/copy-link/:id" element={<CopyLink />} />
+        <Route path="/counselling-modal" element={<CounsellingModal />} />
+        <Route path="/user-review/:id" element={<UserReview />} />
         {/* <Route path="/landing-page" element={<Findclass />} /> */}
       </Routes>
     </Div>
