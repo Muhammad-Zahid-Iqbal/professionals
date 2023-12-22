@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
@@ -8,6 +8,7 @@ import Div from "../../shared/Div";
 import { Link, useNavigate } from "react-router-dom";
 import { Fade, Modal } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
+import { postRequest } from "../../backendservices/ApiCalls";
 
 const Counsellingcard = ({ therapists, loading, pictureLink }) => {
   const maxDetailLength = 400;
@@ -19,6 +20,8 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [open, setOpen] = React.useState(false);
   const [userID, setUserID] = React.useState("");
+  const [reviewData, setReviewData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const handleOpen = (userid) => {
     setOpen(true);
     setUserID(userid);
@@ -49,9 +52,9 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
     position: "absolute",
     top: "50%",
     left: "50%",
-    transform: "translate(-50%, -40%)",
+    transform: "translate(-50%, -20%)",
     minWidth: "70vw",
-    borderRadius:"20px",
+    borderRadius: "20px",
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
@@ -86,6 +89,90 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
     const doc = parser.parseFromString(htmlString, "text/html");
     const textContent = doc.body.textContent || "";
     return textContent.replace(/\\/g, ""); //
+  };
+
+  const GetReviews = () => {
+    let param = {
+      userid: userID,
+    };
+    postRequest(
+      "/getreviews",
+      param,
+      (response) => {
+        setIsLoading(true);
+        console.log("getreviewsResponse", response);
+        if (response?.data?.status === "success") {
+          setReviewData(response?.data?.data);
+        }
+        setIsLoading(false);
+      },
+      (error) => {
+        console.log(error?.response?.data);
+        setIsLoading(false);
+      }
+    );
+  };
+
+  useEffect(() => {
+    GetReviews();
+  }, []);
+
+  const generateStars = (rating) => {
+    const filledStarStyle = {
+      color: "#DEC20B",
+      fontSize: "25px",
+      marginRight: "2px",
+    };
+    const unfilledStarStyle = {
+      color: "gray",
+      fontSize: "25px",
+      marginRight: "2px",
+    };
+
+    const roundedRating = Math.round(rating); // Round the rating to the nearest whole number
+    const decimalPart = rating - roundedRating;
+
+    const stars = Array.from({ length: 5 }, (_, index) => {
+      if (index < roundedRating) {
+        // Full star
+        return (
+          <span key={index} style={filledStarStyle}>
+            ★
+          </span>
+        );
+      } else if (index === roundedRating && decimalPart > 0) {
+        // Partial star
+        const percentageFilled = decimalPart * 100;
+        const gradientStyle = `linear-gradient(90deg, yellow ${percentageFilled}%, gray ${percentageFilled}%)`;
+        return (
+          <span
+            key={index}
+            style={{ ...filledStarStyle, backgroundImage: gradientStyle }}
+          >
+            ★
+          </span>
+        );
+      } else {
+        // Empty star
+        return (
+          <span key={index} style={unfilledStarStyle}>
+            ★
+          </span>
+        );
+      }
+    });
+
+    return stars;
+  };
+  const calculateAverageRating = () => {
+    if (reviewData.length === 0) {
+      return 0; // Return 0 if there is no data to avoid division by zero
+    }
+
+    const totalRating = reviewData.reduce((sum, item) => sum + item.rating, 0);
+    const averageRating = totalRating / reviewData.length;
+
+    return averageRating;
   };
 
   if (loading && !therapists) {
@@ -258,7 +345,6 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
             open={open}
-            // sx={{width:"100%"}}
             disableScrollLock={true}
             onClose={handleClose}
             closeAfterTransition
@@ -271,7 +357,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
           >
             <Fade in={open}>
               <Box sx={style}>
-              {/* <Box
+                {/* <Box
                 sx={{
                   width: "73%",
                   position: "relative",
@@ -331,6 +417,12 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                       >
                         {user?.firstname}
                       </h2>
+                      <Typography>
+                        Average Rating:{" "}
+                        {reviewData[0]?.userid === userID &&
+                          generateStars(calculateAverageRating())}
+                      </Typography>
+
                       <Typography
                         level="body-sm"
                         fontWeight="lg"
@@ -388,6 +480,44 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                       </Button>
                     </CardContent>
                   </Card>
+                  <>
+                    <Card>
+                      <h3>Reviews: </h3>
+                    </Card>
+                    {!isLoading &&
+                      !loading &&
+                      reviewData &&
+                      reviewData?.map(
+                        (item) =>
+                          item.userid === userID && (
+                            <Card key={item.id}>
+                              <CardContent>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
+                                  {generateStars(item.rating)}
+                                </Typography>
+                                <Typography variant="h5" component="div">
+                                  {item?.sender_name}
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    fontSize: "17px",
+                                    fontFamily:
+                                      "Proxima Nova,Open Sans,Helvetica Neue,Arial,sans-serif",
+                                  }}
+                                  dangerouslySetInnerHTML={{
+                                    __html: item?.detail
+                                      .replace(/\\n/g, "")
+                                      .replace(/\\/g, ""),
+                                  }}
+                                />
+                              </CardContent>
+                            </Card>
+                          )
+                      )}
+                  </>
                 </Grid>
                 {/* </Box> */}
               </Box>

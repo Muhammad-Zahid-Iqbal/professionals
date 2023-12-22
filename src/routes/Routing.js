@@ -12,6 +12,7 @@ import UserDetail from '../pages/Counselling-London/UserDetail'
 import CounsellingModal from '../pages/Counselling-London/CounsellingModal'
 import CopyLink from '../pages/dashboard/CopyLink'
 import UserReview from '../pages/Counselling-London/UserReview'
+import StarReviews from '../pages/Counselling-London/StarReviews'
 
 const Routing = () => {
   return (
@@ -28,6 +29,7 @@ const Routing = () => {
         <Route path="/copy-link/:id" element={<CopyLink />} />
         <Route path="/counselling-modal" element={<CounsellingModal />} />
         <Route path="/user-review/:id" element={<UserReview />} />
+        {/* <Route path="/star-reviews" element={<StarReviews />} /> */}
         {/* <Route path="/landing-page" element={<Findclass />} /> */}
       </Routes>
     </Div>

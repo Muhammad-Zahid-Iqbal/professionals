@@ -11,7 +11,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Alertdialog = ({ open, handleClose, signupAlert,handleCloseSignUp }) => {
+const Alertdialog = ({ open, handleClose, signupAlert,handleCloseSignUp, openReview, handleCloseReview }) => {
     return (
         <>
             <Dialog
@@ -45,6 +45,22 @@ const Alertdialog = ({ open, handleClose, signupAlert,handleCloseSignUp }) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseSignUp}>OK</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openReview}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleCloseReview}
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogContent sx={{ width: '250px' }}>
+                    <DialogContentText id="alert-dialog-slide-description" sx={{ color: "green", fontSize: "16px" }}>
+                        Your review added successfully!
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseReview}>OK</Button>
                 </DialogActions>
             </Dialog>
         </>

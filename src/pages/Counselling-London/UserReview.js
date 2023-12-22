@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Card from "@mui/joy/Card";
@@ -13,36 +13,81 @@ import { ErrorMessage, Field, Formik, Form } from "formik";
 import { FormHelperText, TextField, Grid, Rating } from "@mui/material";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { postRequest } from "../../backendservices/ApiCalls";
+import Alertdialog from "../../components/AlertDiaolog/Alertdialog";
 
 const validationSchema = Yup.object({
-    sendername: Yup.string().required("Sender Name is required"),
+  sendername: Yup.string().required("Sender Name is required"),
+  rating: Yup.number()
+    .required("Rating is required")
+    .min(1, "Rating must be at least 1")
+    .max(5, "Rating must be at most 5"),
+    editor: Yup.string().required("Detail  is required"),
+
 });
 const UserReview = () => {
-  const { loading, pictureLink, usersProfileData } = useMyContext();
+  const { loading, pictureLink } = useMyContext();
   const [ckeditorContent, setCkeditorContent] = useState("");
-  console.log("usersProfileData", usersProfileData);
+  const [openReview, setOpenReview] = React.useState(false);
+  const [singleUsersData, setSingleUsersData]= useState('');
+
   const maxDetailLength = 648;
+
   const { id } = useParams();
+
   const user =
-    usersProfileData &&
-    usersProfileData.find((user) => user.id === parseInt(id, 10));
+  singleUsersData &&
+  singleUsersData.find((user) => user.id === parseInt(id, 10));
+
   console.log("user", user);
+
   const handleCkeditorChange = (event, editor) => {
     const data = editor.getData();
     setCkeditorContent(data);
   };
+
+  const handleCloseReview = () => {
+    setOpenReview(false);
+  };
+
   const removePTags = (htmlString) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, "text/html");
     const textContent = doc.body.textContent || "";
     return textContent.replace(/\\/g, ""); //
   };
+
+  const GetSingleUserData = () => {
+    let param = {
+      id:id
+    }
+    postRequest(
+      '/getsingleuserdata',
+      param,
+      (response) => {
+        // setLoading(true);
+        console.log("SingleResponse", response)
+        if (response?.data?.status === 'success') {
+          setSingleUsersData(response?.data?.data);
+          // setPictureLink(response?.data?.profilePicLink);
+        }
+        // setLoading(false);
+      },
+      (error) => {
+        console.log(error?.response?.data);
+        // setLoading(false);
+      }
+    );
+  };
+
+  useEffect(()=>{
+    GetSingleUserData();
+  },[]);
   const handleSubmit = (data, setSubmitting, resetForm) => {
     let params = {
-        userid:id,
-        rating: data.rating,
-        sender_name : data.sendername,
-        detail: ckeditorContent
+      userid: id,
+      rating: data.rating,
+      sender_name: data.sendername,
+      detail: ckeditorContent,
     };
     console.log("params", params);
     postRequest(
@@ -52,14 +97,14 @@ const UserReview = () => {
         console.log("addreviewsResponse", response);
         if (response?.data?.status === "success") {
           console.log("data added successfully");
-        //   setOpen(true);
+          setOpenReview(true);
           resetForm();
           // setIsSubmitted(true);
           // setTimeout(() => {
           //     setIsSubmitted(false);
           // }, 3000);
-        //   getUserData();
-        //   refreshUserData();
+          //   getUserData();
+          //   refreshUserData();
         } else {
           console.log("response not getting");
         }
@@ -76,7 +121,7 @@ const UserReview = () => {
     <>
       <Box
         sx={{
-          width: "90%",
+          width: "95%",
           position: "relative",
           margin: "auto",
           overflow: { xs: "auto", sm: "initial" },
@@ -157,20 +202,20 @@ const UserReview = () => {
                       "Proxima Nova,Open Sans,Helvetica Neue,Arial,sans-serif",
                   }}
                 >
-                  {removePTags(user.detail).length > maxDetailLength
-                    ? `${removePTags(user.detail).substring(
+                  {removePTags(user?.detail).length > maxDetailLength
+                    ? `${removePTags(user?.detail).substring(
                         0,
                         maxDetailLength
                       )}...`
-                    : removePTags(user.detail)}
-                  {removePTags(user.detail).length > maxDetailLength ? (
+                    : removePTags(user?.detail)}
+                  {removePTags(user?.detail).length > maxDetailLength ? (
                     <span
                       style={{ color: "blue", cursor: "pointer" }}
-                    //   onClick={() =>
-                    //     navigate(`/user-detail/${value.id}`, {
-                    //       state: { therapists, pictureLink },
-                    //     })
-                    //   }
+                      //   onClick={() =>
+                      //     navigate(`/user-detail/${value.id}`, {
+                      //       state: { therapists, pictureLink },
+                      //     })
+                      //   }
                     >
                       Read More
                     </span>
@@ -212,26 +257,31 @@ const UserReview = () => {
             <Card>
               <Formik
                 initialValues={{
-                    rating:0,
-                    sendername: "",
-                    editor:"",
+                  rating: 0,
+                  sendername: "",
+                  editor: "",
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(data, { setSubmitting, resetForm }) => {
-                    console.log("formikData", data)
-                  handleSubmit(data, { setSubmitting, resetForm });
+                  console.log("formikData", data);
+                  handleSubmit(data, setSubmitting, resetForm);
                 }}
               >
-                {({ isSubmitting, setFieldValue }) => (
+                {({ isSubmitting, setFieldValue,setFieldError,setFieldTouched }) => (
                   <Form>
                     <Box sx={{ minHeight: "50px" }}>
                       <Rating
-                        sx={{ minHeight: "40px", fontSize:"35px" }}
+                        sx={{ minHeight: "40px", fontSize: "35px" }}
                         name="rating"
                         onChange={(event, newValue) => {
                           setFieldValue("rating", newValue);
                         }}
                       />
+                      <FormHelperText
+                        sx={{ color: "red", m: 0, fontSize: "16px" }}
+                      >
+                        <ErrorMessage name="rating" />
+                      </FormHelperText>
                     </Box>
                     <Box>
                       <Field
@@ -253,7 +303,7 @@ const UserReview = () => {
 
                     <Box mt={1}>
                       <CKEditor
-                      name="editor"
+                        name="editor"
                         editor={ClassicEditor}
                         className="ck-editor__editable"
                         data=""
@@ -266,10 +316,19 @@ const UserReview = () => {
                             );
                           });
                         }}
-                        onChange={(event, editor) =>
-                          handleCkeditorChange(event, editor)
-                        }
+                        onChange={(event, editor) => {
+                          const data = editor.getData();
+                          handleCkeditorChange(event, editor);
+                          setFieldValue("editor", data); // Update the Formik state with the CKEditor content
+                          setFieldTouched("editor", true); // Mark the field as touched
+                          setFieldError("editor", !data ? "Editor content is required" : ""); // Set error if content is empty
+                        }}
                       />
+                      <FormHelperText
+                        sx={{ color: "red", m: 0, fontSize: "16px" }}
+                      >
+                        <ErrorMessage name="editor" />
+                      </FormHelperText>
                     </Box>
 
                     <Box pt={2}>
@@ -293,6 +352,10 @@ const UserReview = () => {
           </Grid>
         </Grid>
         {/* </Grid> */}
+        <Alertdialog
+          openReview={openReview}
+          handleCloseReview={handleCloseReview}
+        />
       </Box>
     </>
   );
