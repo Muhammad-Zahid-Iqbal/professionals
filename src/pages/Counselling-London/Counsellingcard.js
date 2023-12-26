@@ -6,17 +6,15 @@ import Typography from "@mui/material/Typography";
 import { Button, Grid } from "@mui/joy";
 import Div from "../../shared/Div";
 import { Link, useNavigate } from "react-router-dom";
-import { Fade, Modal } from "@mui/material";
+import { Fade, Modal, Rating } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
+import StarIcon from "@mui/icons-material/Star";
 import { postRequest } from "../../backendservices/ApiCalls";
 
 const Counsellingcard = ({ therapists, loading, pictureLink }) => {
   const maxDetailLength = 400;
   const itemsPerPage = 5;
   const maxDisplayedPages = 10;
-  console.log("therapistsCard", therapists);
-  console.log("pictureLink", pictureLink);
-
   const [currentPage, setCurrentPage] = React.useState(1);
   const [open, setOpen] = React.useState(false);
   const [userID, setUserID] = React.useState("");
@@ -28,7 +26,6 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
   };
   const user =
     therapists && therapists.find((user) => user.id === parseInt(userID, 10));
-  console.log("userID", userID);
   const handleClose = () => setOpen(false);
 
   const navigate = useNavigate();
@@ -40,8 +37,6 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
   };
 
   const handleNextClick = () => {
-    console.log("Current Page:", currentPage);
-    console.log("Total Pages:", totalPages);
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
@@ -90,7 +85,23 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
     const textContent = doc.body.textContent || "";
     return textContent.replace(/\\/g, ""); //
   };
-
+  const AverageRating = ({ value }) => {
+    return (
+      <Rating
+        name="average-rating"
+        value={value}
+        readOnly
+        precision={0.5}
+        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+      />
+    );
+  };
+  const averageRating = () => {
+    const totalRating = reviewData.reduce((sum, row) => sum + row.rating, 0);
+    const average = totalRating / reviewData.length;
+    return isNaN(average) ? 0 : average; // Avoid NaN if there are no reviews
+  };
+  
   const GetReviews = () => {
     let param = {
       userid: userID,
@@ -115,68 +126,14 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
 
   useEffect(() => {
     GetReviews();
-  }, []);
+  }, [userID]);
 
-  const generateStars = (rating) => {
-    const filledStarStyle = {
-      color: "#DEC20B",
-      fontSize: "25px",
-      marginRight: "2px",
-    };
-    const unfilledStarStyle = {
-      color: "gray",
-      fontSize: "25px",
-      marginRight: "2px",
-    };
-
-    const roundedRating = Math.round(rating); // Round the rating to the nearest whole number
-    const decimalPart = rating - roundedRating;
-
-    const stars = Array.from({ length: 5 }, (_, index) => {
-      if (index < roundedRating) {
-        // Full star
-        return (
-          <span key={index} style={filledStarStyle}>
-            ★
-          </span>
-        );
-      } else if (index === roundedRating && decimalPart > 0) {
-        // Partial star
-        const percentageFilled = decimalPart * 100;
-        const gradientStyle = `linear-gradient(90deg, yellow ${percentageFilled}%, gray ${percentageFilled}%)`;
-        return (
-          <span
-            key={index}
-            style={{ ...filledStarStyle, backgroundImage: gradientStyle }}
-          >
-            ★
-          </span>
-        );
-      } else {
-        // Empty star
-        return (
-          <span key={index} style={unfilledStarStyle}>
-            ★
-          </span>
-        );
-      }
-    });
-
-    return stars;
-  };
-  const calculateAverageRating = () => {
-    if (reviewData.length === 0) {
-      return 0; // Return 0 if there is no data to avoid division by zero
-    }
-
-    const totalRating = reviewData.reduce((sum, item) => sum + item.rating, 0);
-    const averageRating = totalRating / reviewData.length;
-
-    return averageRating;
-  };
-
-  if (loading && !therapists) {
+  if ( loading && !therapists) {
     return <h1>Loading ...</h1>;
+  }
+
+  if (isLoading) {
+    return <h1>Loading ...</h1>
   }
   return (
     <>
@@ -418,9 +375,10 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                         {user?.firstname}
                       </h2>
                       <Typography>
-                        Average Rating:{" "}
-                        {reviewData[0]?.userid === userID &&
-                          generateStars(calculateAverageRating())}
+                      Average Rating: 
+                      {reviewData[0]?.userid === userID &&
+                      <AverageRating value={averageRating()} />
+                      }
                       </Typography>
 
                       <Typography
@@ -484,39 +442,39 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                     <Card>
                       <h3>Reviews: </h3>
                     </Card>
-                    {!isLoading &&
-                      !loading &&
-                      reviewData &&
-                      reviewData?.map(
-                        (item) =>
-                          item.userid === userID && (
-                            <Card key={item.id}>
-                              <CardContent>
-                                <Typography
-                                  variant="body2"
-                                  color="text.secondary"
-                                >
-                                  {generateStars(item.rating)}
-                                </Typography>
-                                <Typography variant="h5" component="div">
-                                  {item?.sender_name}
-                                </Typography>
-                                <Typography
+                    {!isLoading && reviewData?.map(row => (
+                      row.userid === userID && (
+                    <Card key={row?.id}>
+                      <Rating
+                        name="text-feedback"
+                        value={row?.rating}
+                        readOnly
+                        precision={0.5}
+                        emptyIcon={
+                          <StarIcon
+                            style={{ opacity: 0.55 }}
+                            fontSize="inherit"
+                          />
+                        }
+                      />
+                      <Typography variant="h5" component="div">
+                        {row?.sender_name}
+                      </Typography>
+                      <Typography
                                   sx={{
                                     fontSize: "17px",
                                     fontFamily:
                                       "Proxima Nova,Open Sans,Helvetica Neue,Arial,sans-serif",
                                   }}
                                   dangerouslySetInnerHTML={{
-                                    __html: item?.detail
+                                    __html: row?.detail
                                       .replace(/\\n/g, "")
                                       .replace(/\\/g, ""),
                                   }}
                                 />
-                              </CardContent>
-                            </Card>
-                          )
-                      )}
+                    </Card>
+                      )
+                    ))}
                   </>
                 </Grid>
                 {/* </Box> */}
