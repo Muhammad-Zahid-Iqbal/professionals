@@ -1,28 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
+import React, { useEffect, useState } from "react";
+import { ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
-import {
-  Grid,
-  TextField,
-  Button,
-  Box,
-  Typography,
-  FormHelperText,
-  IconButton,
-  Avatar,
-  Select,
-  InputAdornment,
-  MenuItem,
-  InputLabel,
-  FormControl,
-} from "@mui/material";
+import { Grid, TextField, Button, Box, FormHelperText, IconButton, Avatar, Select, MenuItem, InputLabel, FormControl,} from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import { authUserData, postRequest } from "../../backendservices/ApiCalls";
+import { postRequest } from "../../backendservices/ApiCalls";
 import { useLocation } from "react-router-dom";
-import styled from "@emotion/styled";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useMyContext } from "../../components/context-user-data/ContextUserData";
-import Editor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Alertdialog from "../../components/AlertDiaolog/Alertdialog";
 import Div from "../../shared/Div";
@@ -30,7 +14,6 @@ import CopyLink from "./CopyLink";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
-  // email: Yup.string().email('Invalid email address').required('Email is required'),
   education: Yup.string().required("Education is required"),
   phone: Yup.string().required("Phone is required"),
   city: Yup.string().required("City is required"),
@@ -44,23 +27,12 @@ const Dashboard = () => {
   const [open, setOpen] = React.useState(false);
   const [load, setLoad] = React.useState(true);
  
-  const {
-    loginUserData,
-    setLoginUserData,
-    getUserData,
-    loading,
-    refreshUserData,
-  } = useMyContext();
+  const { loginUserData, getUserData, loading, refreshUserData,} = useMyContext();
   const rowData = loginUserData;
-  console.log("rowData", rowData);
   const [selectedLocation, setSelectedLocation] = React.useState();
-  // const [initialLoad, setInitialLoad] = useState(true);
   const location = useLocation();
 
   const useremail = location?.state?.useremail;
-  // const userLoginID = location?.state?.userLoginID;
-  // console.log("userLoginID", userLoginID);
-  console.log("useremail", useremail);
   useEffect(() => {
     refreshUserData();
     setLoad(false);
@@ -82,7 +54,6 @@ const Dashboard = () => {
       reader.onloadend = () => {
         const base64Data = reader.result;
         if (base64Data) {
-          // localStorage.setItem("selectedImage", base64Data);
           const userKey = `selectedImage_${useremail}`;
         localStorage.setItem(userKey, base64Data);
           setSelectedImage(base64Data);
@@ -118,20 +89,14 @@ const Dashboard = () => {
       address:data.address,
       postcode: data.postcode,
     };
-    console.log("params", params);
     postRequest(
       "/updateuserdata",
       params,
       (response) => {
-        console.log("dashbordRepo", response);
         if (response?.data?.status === "success") {
           console.log("data added successfully");
           setOpen(true);
           resetForm();
-          // setIsSubmitted(true);
-          // setTimeout(() => {
-          //     setIsSubmitted(false);
-          // }, 3000);
           getUserData();
           refreshUserData();
         } else {
@@ -147,11 +112,6 @@ const Dashboard = () => {
     const data = editor.getData();
     setCkeditorContent(data);
   };
-  // const ErrorText = styled('div')({
-  //     color: 'red',
-  //     fontSize: '16px',
-  //     marginTop: '-10px', // Adjust this value as needed
-  //   });
   if (loading && !rowData) {
     return <h1>Loading...</h1>;
   }
@@ -179,7 +139,7 @@ const Dashboard = () => {
             handleSubmit(data, { setSubmitting, resetForm });
           }}
         >
-          {({ isSubmitting, setFieldValue }) => (
+          {({ setFieldValue }) => (
             <Form>
               <CopyLink userLoginID={rowData?.userid}/>
               <Grid container spacing={2}>
@@ -193,7 +153,6 @@ const Dashboard = () => {
                         position: "relative",
                       }}
                       p={1}
-                      // border={1}
                       width={"160px"}
                       margin={"auto"}
                       mt={2}
@@ -224,7 +183,6 @@ const Dashboard = () => {
                             justifyContent: "center",
                           }}
                         >
-                          {/* You can customize the placeholder icon or text */}
                           <PhotoCameraIcon fontSize="large" color="action" />
                         </Avatar>
                       )}
@@ -240,7 +198,6 @@ const Dashboard = () => {
                           position: "absolute",
                           bottom: "10px",
                           right: "20px",
-                          // background: 'rgba(255, 255, 255, 0.8)',
                           background: "lightblue",
                         }}
                         component="span"
@@ -265,11 +222,6 @@ const Dashboard = () => {
                           InputProps={{
                             readOnly: true,
                           }}
-                          // helperText={
-                          //     <FormHelperText sx={{ color: 'red', m: 0, fontSize: "16px" }}>
-                          //         <ErrorMessage name="name" />
-                          //     </FormHelperText>
-                          // }
                         />
                       </Box>
                     </Grid>
@@ -288,9 +240,6 @@ const Dashboard = () => {
                             readOnly: true,
                           }}
                         />
-                        {/* <ErrorText>
-                                            <ErrorMessage name="email" />
-                                        </ErrorText> */}
                       </Box>
                     </Grid>
                     <Grid item sm={6} xs={12}>
@@ -440,7 +389,6 @@ const Dashboard = () => {
                     />
                   </Box>
 
-                  {/* Add similar code for other fields */}
 
                   <Box mb={3} pl={2} pr={2}>
                     <Button
@@ -461,7 +409,7 @@ const Dashboard = () => {
             </Form>
           )}
         </Formik>
-        <Alertdialog open={open} handleClose={handleClose} />
+        <Alertdialog open={open} handleClose={handleClose} content="Your Profile data has been updated Successfully!" />
       </>
     );
   }

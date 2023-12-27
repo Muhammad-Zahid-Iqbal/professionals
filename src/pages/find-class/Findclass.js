@@ -1,30 +1,20 @@
 import React from "react";
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { Box, Button, FormControl, Grid, MenuItem, Select, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import SearchIcon from "@mui/icons-material/Search";
 import Toppng from "../../images/top.png";
 import Bottompng from "../../images/bottom.png";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import Div from "../../shared/Div";
-// import { MenuItem } from "@mui/joy";
 
 const validationSchema = Yup.object({
-  // type: Yup.string().required('Type is required'),
   search: Yup.string().required('Address to postcode'),
 });
 
 const Findclass = () => {
-  const [findClass, setFindClass] = React.useState("Class A");
   const [selectedLocation, setSelectedLocation] = React.useState("tutors");
   const handleChangeSelect = (event) => {
     setSelectedLocation(event.target.value);
-  };
-  const selectImage =
-    "https://c.superprof.com/style/images/home/v4/book-new-off.svg";
-  const handleChange = (event) => {
-    console.log("Selected value:", event.target.value);
-    setFindClass(event.target.value);
   };
 
   return (
@@ -79,7 +69,6 @@ const Findclass = () => {
               }}
               validationSchema={validationSchema}
               onSubmit={(data, { setSubmitting, resetForm }) => {
-                console.log("dataFormik", data);
                 // handleSubmit(data, { setSubmitting, resetForm });
               }}
             >
@@ -112,7 +101,6 @@ const Findclass = () => {
                           border: "none",
                           background: "transparent",
                           width: "100%",
-                          // maxWidth: "30%",
                           height: "78px",
 
                           background: "#fff",
@@ -175,9 +163,7 @@ const Findclass = () => {
                             />
                           </>
                         ),
-                        // endAdornment: (
-
-                        // ),
+                        
                       }}
                       sx={{
                         "& .MuiOutlinedInput-root": {
@@ -199,7 +185,6 @@ const Findclass = () => {
                     />
                     
 
-                    {/* </div> */}
                     <Button
                       type="submit"
                       sx={{
@@ -207,8 +192,6 @@ const Findclass = () => {
                         height: "75px",
                         background: "#ff7002",
                         color: "#fff",
-                        // borderRadius: "10px", // Border radius
-                        // marginLeft: "10px", // Add some margin for spacing
                       }}
                       variant="contained"
                     >

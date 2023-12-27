@@ -5,7 +5,7 @@ import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/material/Typography";
 import { Button, Grid } from "@mui/joy";
 import Div from "../../shared/Div";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Fade, Modal, Rating } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import StarIcon from "@mui/icons-material/Star";
@@ -55,8 +55,6 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
     boxShadow: 24,
     p: 4,
   };
-  const top = 25;
-  const left = 25;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
@@ -111,7 +109,6 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
       param,
       (response) => {
         setIsLoading(true);
-        console.log("getreviewsResponse", response);
         if (response?.data?.status === "success") {
           setReviewData(response?.data?.data);
         }
@@ -314,19 +311,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
           >
             <Fade in={open}>
               <Box sx={style}>
-                {/* <Box
-                sx={{
-                  width: "73%",
-                  position: "relative",
-                  margin: "auto",
-                  overflow: { xs: "auto", sm: "initial" },
-                  mb: 5,
-                }}
-              > */}
                 <Grid item>
-                  {/* <Div sx={{ padding: "20px" }}>
-                      <h1>Counselling in London</h1>
-                    </Div> */}
                   <Card
                     orientation="horizontal"
                     sx={{
@@ -477,7 +462,6 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                     ))}
                   </>
                 </Grid>
-                {/* </Box> */}
               </Box>
             </Fade>
           </Modal>

@@ -38,7 +38,6 @@ const CopyLink = ({userLoginID}) => {
         disableElevation
         onClick={handleCopyClick}
         endIcon={<FileCopyIcon />}
-        // sx={{ marginBottom: 2 }}
       >
         Copy Link
       </Button>
@@ -56,7 +55,6 @@ const CopyLink = ({userLoginID}) => {
       <p style={{color:"green"}}>Share your Review Link with your clients</p>
 
       <Div style={{ display: "none" }}>
-        {/* Hidden text for copying */}
         <span ref={textRef}>http://localhost:3000/user-review/{userLoginID}</span>
       </Div>
     </Grid>

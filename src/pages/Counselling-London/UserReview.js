@@ -31,7 +31,6 @@ const UserReview = () => {
   const [openReview, setOpenReview] = React.useState(false);
   const [singleUsersData, setSingleUsersData]= useState('');
   const [ratingValue, setRatingValue] = useState(0);
-  const [editor, setEditor] = useState(null);
   const [key, setKey] = useState(0);
   const navigate = useNavigate();
 
@@ -43,8 +42,6 @@ const UserReview = () => {
   const user =
   singleUsersData &&
   singleUsersData.find((user) => user.id === parseInt(id, 10));
-
-  console.log("user", user);
 
   const handleCkeditorChange = (event, editor) => {
     const data = editor.getData();
@@ -71,7 +68,6 @@ const UserReview = () => {
       param,
       (response) => {
         // setLoading(true);
-        console.log("SingleResponse", response)
         if (response?.data?.status === 'success') {
           setSingleUsersData(response?.data?.data);
         }
@@ -87,12 +83,7 @@ const UserReview = () => {
   useEffect(()=>{
     GetSingleUserData();
   },[]);
-  
-  useEffect(() => {
-    if (editor && editor.resetData) {
-      editor.resetData(); // Reset CKEditor content to an empty string
-    }
-  }, [editor, key]);
+
   const handleSubmit = (data, setSubmitting, resetForm) => {
     let params = {
       userid: id,
@@ -100,20 +91,17 @@ const UserReview = () => {
       sender_name: data.sendername,
       detail: ckeditorContent,
     };
-    console.log("params", params);
     postRequest(
       "/addreviews",
       params,
       (response) => {
-        console.log("addreviewsResponse", response);
         if (response?.data?.status === "success") {
           console.log("data added successfully");
           setOpenReview(true);
           resetForm();
+
           setKey((prevKey) => prevKey + 1);
-          if (editor && editor.setData) {
-            editor.setData("");
-          }
+
         } else {
           console.log("response not getting");
         }
@@ -272,14 +260,13 @@ const UserReview = () => {
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(data, { setSubmitting, resetForm }) => {
-                  console.log("formikData", data);
                   handleSubmit(data, setSubmitting, resetForm);
                   setRatingValue(0);
                 }}
               >
                 {({ isSubmitting, setFieldValue,setFieldError,setFieldTouched }) => (
                   <Form>
-                    <Typography sx={{textAlign:"center", fontSize:"25px"}}>Add Reviews</Typography>
+                    <Typography sx={{textAlign:"center", fontSize:"25px"}}>Add Review</Typography>
                     <Box sx={{ minHeight: "50px",textAlign:"center", p:"10px" }}>
                       <Rating
                         sx={{ minHeight: "40px", fontSize: "35px" }}
@@ -329,7 +316,6 @@ const UserReview = () => {
                               editor.editing.view.document.getRoot()
                             );
                           });
-                          setEditor(editor);
                         }}
                         onChange={(event, editor) => {
                           const data = editor.getData();
@@ -368,8 +354,10 @@ const UserReview = () => {
         </Grid>
         {/* </Grid> */}
         <Alertdialog
-          openReview={openReview}
-          handleCloseReview={handleCloseReview}
+          open={openReview}
+          handleClose={handleCloseReview}
+          content="Your review added successfully!"
+          disableScrollLock={true}
         />
       </Box>
     </>

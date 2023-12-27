@@ -4,7 +4,6 @@ import { useMyContext } from "../../components/context-user-data/ContextUserData
 
 const Counselling = () => {
   const { loading, pictureLink, usersProfileData } = useMyContext();
-  console.log("usersProfileData", usersProfileData);
 
   return (
     <>

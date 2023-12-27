@@ -8,11 +8,12 @@ export const MyContextProvider = ({ children }) => {
   const [loginUserData, setLoginUserData] = useState();
   const [usersProfileData, setUsersProfileData] = useState([]);
   const [pictureLink, setPictureLink] = useState();
-  const [loading,setLoading]=useState(true)
+  const [loading,setLoading]=useState(false)
   
   const getUserData = () => {
     authUserData(
       (response) => {
+        setLoading(true);
         setLoginUserData(response?.data?.data);
         setLoading(false)
       },
