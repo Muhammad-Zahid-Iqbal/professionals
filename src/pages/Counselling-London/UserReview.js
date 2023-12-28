@@ -100,6 +100,7 @@ const UserReview = () => {
       "/addreviews",
       params,
       (response) => {
+        console.log("addreviewsResponse", response)
         if (response?.data?.status === "success") {
           console.log("data added successfully");
           setOpenReview(true);

@@ -10,6 +10,7 @@ import Dashboard from '../pages/dashboard/Dashboard'
 import UserDetail from '../pages/Counselling-London/UserDetail'
 import CopyLink from '../pages/dashboard/CopyLink'
 import UserReview from '../pages/Counselling-London/UserReview'
+import FindCounselling from '../pages/find-class/FindCounselling'
 
 const Routing = () => {
   return (
@@ -24,6 +25,7 @@ const Routing = () => {
         <Route path="/user-detail/:id" element={<UserDetail />} />
         <Route path="/copy-link/:id" element={<CopyLink />} />
         <Route path="/user-review/:id" element={<UserReview />} />
+        <Route path="find-counselling" element={<FindCounselling />} />
       </Routes>
     </Div>
   )

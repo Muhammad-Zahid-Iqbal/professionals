@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, FormControl, Grid, MenuItem, Select, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Toppng from "../../images/top.png";
@@ -6,6 +6,8 @@ import Bottompng from "../../images/bottom.png";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import Div from "../../shared/Div";
+import { postRequest } from "../../backendservices/ApiCalls";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   search: Yup.string().required('Address to postcode'),
@@ -13,10 +15,63 @@ const validationSchema = Yup.object({
 
 const Findclass = () => {
   const [selectedLocation, setSelectedLocation] = React.useState("tutors");
+  const [usersProfileData, setUsersProfileData] = useState([]);
+  const [pictureLink, setPictureLink] = useState();
+
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const handleChangeSelect = (event) => {
     setSelectedLocation(event.target.value);
   };
+  const handleSubmit = (data, setSubmitting, resetForm) => {
+    let params = {
+      user_type: selectedLocation,
+      city:data.search
+      
+    };
+    postRequest(
+      "/getsearchdata",
+      params,
+      (response) => {
+        console.log("getsearchdataRes", response)
+        if (response?.data?.status === "success") {
+          setLoading(true);
+          setUsersProfileData(response?.data?.data);
+          setPictureLink(response?.data?.profilePicLink);
+          setLoading(false);
+          console.log("State after setting data:", usersProfileData, loading);
 
+          // navigate("/find-counselling", {
+          //   state: {
+          //     usersProfileData,loading
+          //   },
+          // });
+        } else {
+          console.log("response not getting");
+          setLoading(false);
+
+        }
+      },
+      (error) => {
+        console.log(error?.response?.data);
+        setLoading(false);
+
+      }
+    );
+  };
+  console.log("usersProfileData", usersProfileData)
+  useEffect(() => {
+    if (usersProfileData.length > 0) {
+      navigate("/find-counselling", {
+        state: {
+          usersProfileData,
+          loading,
+          pictureLink
+        },
+      });
+    }
+  }, [usersProfileData, loading]);
+  
   return (
     <>
       <Box sx={{ background: "#f2f2f2" }}>
@@ -69,7 +124,7 @@ const Findclass = () => {
               }}
               validationSchema={validationSchema}
               onSubmit={(data, { setSubmitting, resetForm }) => {
-                // handleSubmit(data, { setSubmitting, resetForm });
+                handleSubmit(data,  setSubmitting, resetForm );
               }}
             >
               {({ isSubmitting, setFieldValue }) => (
@@ -147,7 +202,7 @@ const Findclass = () => {
                       id="search"
                       name="search"
                       type="search"
-                      placeholder="Address to Postcode"
+                      placeholder="Enter City"
                       InputProps={{
                         startAdornment: (
                           <>

@@ -17,7 +17,7 @@ import Button from "@mui/material/Button";
 // import logo from "../../images/logo.svg";
 // import gitlab from "../../images/gitlab.png";
 import yourlogo from "../../images/yourlogo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const drawerWidth = 240;
@@ -25,6 +25,7 @@ const drawerWidth = 240;
 const Appbar = (props) => {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -33,7 +34,7 @@ const Appbar = (props) => {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2, background:"blue" }}>
-      <img src={yourlogo} alt="logo" style={{width:"100%",}}/>
+      <img src={yourlogo} alt="logo" style={{width:"100%", cursor:"pointer"}} onClick={() =>navigate('/')}/>
       </Typography>
       <Divider />
       <List>
@@ -91,7 +92,7 @@ const Appbar = (props) => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            <img src={yourlogo} alt="logo" style={{width:"20%", height:"70px"}}/>
+            <img src={yourlogo} alt="logo" style={{width:"20%", height:"70px", cursor:"pointer"}} onClick={() =>navigate('/')}/>
           </Typography>
           <Box
             sx={{
