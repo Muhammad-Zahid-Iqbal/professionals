@@ -26,10 +26,12 @@ const validationSchema = Yup.object({
 
 });
 const UserReview = () => {
-  const { loading, pictureLink } = useMyContext();
+  // const { loading, pictureLink } = useMyContext();
   const [ckeditorContent, setCkeditorContent] = useState("");
   const [openReview, setOpenReview] = React.useState(false);
   const [singleUsersData, setSingleUsersData]= useState('');
+  const [pictureLink, setPictureLink] = useState();
+  const [loading, setLoading] = useState(false);
   const [ratingValue, setRatingValue] = useState(0);
   const [key, setKey] = useState(0);
   const navigate = useNavigate();
@@ -68,8 +70,11 @@ const UserReview = () => {
       param,
       (response) => {
         // setLoading(true);
+        console.log("singleUserResponse", response)
         if (response?.data?.status === 'success') {
           setSingleUsersData(response?.data?.data);
+          setPictureLink(response?.data?.profilePicLink);
+
         }
         // setLoading(false);
       },
@@ -210,7 +215,7 @@ const UserReview = () => {
                       style={{ color: "blue", cursor: "pointer" }}
                         onClick={() =>
                           navigate(`/user-detail/${user.id}`, {
-                            state: { singleUsersData, pictureLink },
+                            state: {therapists: singleUsersData, pictureLink },
                           })
                         }
                     >

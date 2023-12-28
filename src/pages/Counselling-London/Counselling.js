@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Counsellingcard from "./Counsellingcard";
-import { useMyContext } from "../../components/context-user-data/ContextUserData";
+import { postRequest } from "../../backendservices/ApiCalls";
 
 const Counselling = () => {
-  const { loading, pictureLink, usersProfileData } = useMyContext();
+  const [usersProfileData, setUsersProfileData] = useState([]);
+  const [pictureLink, setPictureLink] = useState();
+  const [loading,setLoading]=useState(false)
 
+  const GetallUsers = () => {
+    postRequest(
+      '/getallusers',
+      "",
+      (response) => {
+        setLoading(true);
+        if (response?.data?.status === 'success') {
+          setUsersProfileData(response?.data?.data);
+          setPictureLink(response?.data?.profilePicLink);
+        }
+        setLoading(false);
+      },
+      (error) => {
+        console.log(error?.response?.data);
+        setLoading(false);
+      }
+    );
+  };
+
+  
+  useEffect(() => {
+    GetallUsers();
+  }, []);
+  
   return (
     <>
       <Counsellingcard

@@ -24,6 +24,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
     setOpen(true);
     setUserID(userid);
   };
+  console.log("therapists",therapists)
   const user =
     therapists && therapists.find((user) => user.id === parseInt(userID, 10));
   const handleClose = () => setOpen(false);
@@ -225,7 +226,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                       style={{ color: "blue", cursor: "pointer" }}
                       onClick={() =>
                         navigate(`/user-detail/${value.id}`, {
-                          state: { therapists, pictureLink },
+                          state: { therapists, pictureLink, loading },
                         })
                       }
                     >

@@ -96,9 +96,7 @@ const Dashboard = () => {
         if (response?.data?.status === "success") {
           console.log("data added successfully");
           setOpen(true);
-          resetForm();
-          getUserData();
-          refreshUserData();
+          // getUserData();
         } else {
           console.log("response not getting");
         }

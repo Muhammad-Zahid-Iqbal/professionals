@@ -1,18 +1,20 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/material/Typography";
 import { Button, Grid } from "@mui/joy";
 import Div from "../../shared/Div";
-import { useMyContext } from "../../components/context-user-data/ContextUserData";
 
 
 const UserDetail = () => {
-  const { loading, pictureLink, usersProfileData } = useMyContext();
   const { id } = useParams();
-  const user = usersProfileData && usersProfileData.find((user) => user.id === parseInt(id, 10));
+  const location =  useLocation();
+  const therapists = location.state.therapists;
+  const pictureLink = location.state.pictureLink;
+  const loading = location.state.loading;
+  const user = therapists && therapists.find((user) => user.id === parseInt(id, 10));
 
   if (!user && loading) {
     return <div>User not found</div>;
