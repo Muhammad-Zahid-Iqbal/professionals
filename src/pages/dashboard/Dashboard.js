@@ -1,20 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  Grid,
-  TextField,
-  Button,
-  Box,
-  Typography,
-  FormHelperText,
-  IconButton,
-  Avatar,
-  Select,
-  InputAdornment,
-  MenuItem,
-  InputLabel,
-  FormControl,
+import { Grid, TextField, Button, Box, Typography, FormHelperText, IconButton, Avatar, Select, InputAdornment, MenuItem, InputLabel, FormControl,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { authUserData, postRequest } from "../../backendservices/ApiCalls";

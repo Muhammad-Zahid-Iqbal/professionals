@@ -1,17 +1,5 @@
 import React, { useState } from "react";
-import {
-  TextField,
-  Button,
-  Link,
-  Typography,
-  Container,
-  CssBaseline,
-  Grid,
-  Box,
-  FormHelperText,
-  Paper,
-  Alert,
-} from "@mui/material";
+import { TextField, Button, Link, Typography, Container, CssBaseline, Grid, Box, FormHelperText, Paper, Alert,} from "@mui/material";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import Div from "../../shared/Div";
@@ -80,19 +68,21 @@ const Login = () => {
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <img src={logo} alt="logo header" style={{ width: "15%" }} />
       </Box>
-      <Container
-        component="main"
+      <Grid container 
+        // component="main"
         sx={{
-          height: "80vh",
+          // height: "95vh",
+          padding:"25px 0px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          // minWidth:"50vw"
         }}
       >
         <CssBaseline />
         <Paper
           elevation={3}
-          sx={{ padding: "10px", height: "80%", maxWidth: "40%" }}
+          // sx={{ padding: "10px", height: "80%", minWidth: "20vw" }}
         >
           {isSubmitted && (
             <Alert severity="success">You have been Login successfully!</Alert>
@@ -207,7 +197,7 @@ const Login = () => {
             </Grid>
           </Div>
         </Paper>
-      </Container>
+      </Grid>
     </>
   );
 };
