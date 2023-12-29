@@ -85,12 +85,12 @@ const Appbarlogin = (props) => {
               <img src={header_trustpilot} alt="logo" />
             </Typography>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              <Button sx={{ color: "#fff", m: 2 }} to="/" component={Link}> Find A Clas </Button>
+              {/* <Button sx={{ color: "#fff", m: 2 }} to="/" component={Link}> Find A Class </Button>
               <Button sx={{ color: "#fff", m: 2 }}>About</Button>
               <Button sx={{ color: "#fff", m: 2 }} to="/counselling" component={Link}> New </Button>
               <Button sx={{ color: "#fff", m: 2 }} to="/sign-up" component={Link}>Join US</Button>
-              <Button sx={{ color: "#fff", m: 2 }}>Location</Button>
-              <Button sx={{ m: 1, color: "#ee7925", backgroundColor: "#fff", "&:hover": { backgroundColor: "#ee7925", borderColor: "#ee7925", color: "#fff",},}} variant="outlined" startIcon={<LocationOnIcon />} > Find your nearest academy</Button>
+              <Button sx={{ color: "#fff", m: 2 }}>Location</Button> */}
+              <Button sx={{ m: 1, color: "#ee7925", backgroundColor: "#fff", "&:hover": { backgroundColor: "#ee7925", borderColor: "#ee7925", color: "#fff",},}} variant="outlined" startIcon={<LocationOnIcon />} onClick={() =>navigate('/counselling')}> Find your nearest tutors and accessors</Button>
             </Box>
             <Button sx={{ m: 1, color: "#ee7925", backgroundColor: "#fff", width:"80px", "&:hover": { backgroundColor: "#ee7925", borderColor: "#ee7925", color: "#fff",},}} variant="contained" onClick={handleLoginLogout}>
               {localStorage.getItem("token") !== null ? "Logout" : "Login"}

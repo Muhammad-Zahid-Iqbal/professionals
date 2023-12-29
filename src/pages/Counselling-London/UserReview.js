@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
@@ -15,6 +15,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { postRequest } from "../../backendservices/ApiCalls";
 import Alertdialog from "../../components/AlertDiaolog/Alertdialog";
 
+
 const validationSchema = Yup.object({
   sendername: Yup.string().required("Sender Name is required"),
   rating: Yup.number()
@@ -25,20 +26,24 @@ const validationSchema = Yup.object({
 
 });
 const UserReview = () => {
-  const { loading, pictureLink } = useMyContext();
+  // const { loading, pictureLink } = useMyContext();
   const [ckeditorContent, setCkeditorContent] = useState("");
   const [openReview, setOpenReview] = React.useState(false);
   const [singleUsersData, setSingleUsersData]= useState('');
+  const [pictureLink, setPictureLink] = useState();
+  const [loading, setLoading] = useState(false);
+  const [ratingValue, setRatingValue] = useState(0);
+  const [key, setKey] = useState(0);
+  const navigate = useNavigate();
 
-  const maxDetailLength = 648;
+
+  const maxDetailLength = 848;
 
   const { id } = useParams();
 
   const user =
   singleUsersData &&
   singleUsersData.find((user) => user.id === parseInt(id, 10));
-
-  console.log("user", user);
 
   const handleCkeditorChange = (event, editor) => {
     const data = editor.getData();
@@ -65,10 +70,11 @@ const UserReview = () => {
       param,
       (response) => {
         // setLoading(true);
-        console.log("SingleResponse", response)
+        console.log("singleUserResponse", response)
         if (response?.data?.status === 'success') {
           setSingleUsersData(response?.data?.data);
-          // setPictureLink(response?.data?.profilePicLink);
+          setPictureLink(response?.data?.profilePicLink);
+
         }
         // setLoading(false);
       },
@@ -82,6 +88,7 @@ const UserReview = () => {
   useEffect(()=>{
     GetSingleUserData();
   },[]);
+
   const handleSubmit = (data, setSubmitting, resetForm) => {
     let params = {
       userid: id,
@@ -89,22 +96,18 @@ const UserReview = () => {
       sender_name: data.sendername,
       detail: ckeditorContent,
     };
-    console.log("params", params);
     postRequest(
       "/addreviews",
       params,
       (response) => {
-        console.log("addreviewsResponse", response);
+        console.log("addreviewsResponse", response)
         if (response?.data?.status === "success") {
           console.log("data added successfully");
           setOpenReview(true);
           resetForm();
-          // setIsSubmitted(true);
-          // setTimeout(() => {
-          //     setIsSubmitted(false);
-          // }, 3000);
-          //   getUserData();
-          //   refreshUserData();
+
+          setKey((prevKey) => prevKey + 1);
+
         } else {
           console.log("response not getting");
         }
@@ -211,11 +214,11 @@ const UserReview = () => {
                   {removePTags(user?.detail).length > maxDetailLength ? (
                     <span
                       style={{ color: "blue", cursor: "pointer" }}
-                      //   onClick={() =>
-                      //     navigate(`/user-detail/${value.id}`, {
-                      //       state: { therapists, pictureLink },
-                      //     })
-                      //   }
+                        onClick={() =>
+                          navigate(`/user-detail/${user.id}`, {
+                            state: {therapists: singleUsersData, pictureLink },
+                          })
+                        }
                     >
                       Read More
                     </span>
@@ -263,18 +266,21 @@ const UserReview = () => {
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(data, { setSubmitting, resetForm }) => {
-                  console.log("formikData", data);
                   handleSubmit(data, setSubmitting, resetForm);
+                  setRatingValue(0);
                 }}
               >
                 {({ isSubmitting, setFieldValue,setFieldError,setFieldTouched }) => (
                   <Form>
-                    <Box sx={{ minHeight: "50px" }}>
+                    <Typography sx={{textAlign:"center", fontSize:"25px"}}>Add Review</Typography>
+                    <Box sx={{ minHeight: "50px",textAlign:"center", p:"10px" }}>
                       <Rating
                         sx={{ minHeight: "40px", fontSize: "35px" }}
                         name="rating"
+                        value={ratingValue}
                         onChange={(event, newValue) => {
                           setFieldValue("rating", newValue);
+                          setRatingValue(newValue);
                         }}
                       />
                       <FormHelperText
@@ -304,6 +310,7 @@ const UserReview = () => {
                     <Box mt={1}>
                       <CKEditor
                         name="editor"
+                        key={key}
                         editor={ClassicEditor}
                         className="ck-editor__editable"
                         data=""
@@ -353,8 +360,10 @@ const UserReview = () => {
         </Grid>
         {/* </Grid> */}
         <Alertdialog
-          openReview={openReview}
-          handleCloseReview={handleCloseReview}
+          open={openReview}
+          handleClose={handleCloseReview}
+          content="Your review added successfully!"
+          disableScrollLock={true}
         />
       </Box>
     </>

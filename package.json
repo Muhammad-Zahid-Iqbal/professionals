@@ -1,5 +1,6 @@
 {
-  "name": "professional",
+  "name": "dyslexiafocus",
+  "homepage": "https://dyslexiafocus.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

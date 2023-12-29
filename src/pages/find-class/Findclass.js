@@ -1,32 +1,77 @@
-import React from "react";
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Button, FormControl, Grid, MenuItem, Select, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import SearchIcon from "@mui/icons-material/Search";
 import Toppng from "../../images/top.png";
 import Bottompng from "../../images/bottom.png";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import Div from "../../shared/Div";
-// import { MenuItem } from "@mui/joy";
+import { postRequest } from "../../backendservices/ApiCalls";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
-  // type: Yup.string().required('Type is required'),
   search: Yup.string().required('Address to postcode'),
 });
 
 const Findclass = () => {
-  const [findClass, setFindClass] = React.useState("Class A");
   const [selectedLocation, setSelectedLocation] = React.useState("tutors");
+  const [usersProfileData, setUsersProfileData] = useState([]);
+  const [pictureLink, setPictureLink] = useState();
+
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const handleChangeSelect = (event) => {
     setSelectedLocation(event.target.value);
   };
-  const selectImage =
-    "https://c.superprof.com/style/images/home/v4/book-new-off.svg";
-  const handleChange = (event) => {
-    console.log("Selected value:", event.target.value);
-    setFindClass(event.target.value);
-  };
+  const handleSubmit = (data, setSubmitting, resetForm) => {
+    let params = {
+      user_type: selectedLocation,
+      city:data.search
+      
+    };
+    postRequest(
+      "/getsearchdata",
+      params,
+      (response) => {
+        console.log("getsearchdataRes", response)
+        if (response?.data?.status === "success") {
+          setLoading(true);
+          setUsersProfileData(response?.data?.data);
+          setPictureLink(response?.data?.profilePicLink);
+          setLoading(false);
+          console.log("State after setting data:", usersProfileData, loading);
 
+          // navigate("/find-counselling", {
+          //   state: {
+          //     usersProfileData,loading
+          //   },
+          // });
+        } else {
+          console.log("response not getting");
+          setLoading(false);
+
+        }
+      },
+      (error) => {
+        console.log(error?.response?.data);
+        setLoading(false);
+
+      }
+    );
+  };
+  console.log("usersProfileData", usersProfileData)
+  useEffect(() => {
+    if (usersProfileData.length > 0) {
+      navigate("/find-counselling", {
+        state: {
+          usersProfileData,
+          loading,
+          pictureLink
+        },
+      });
+    }
+  }, [usersProfileData, loading]);
+  
   return (
     <>
       <Box sx={{ background: "#f2f2f2" }}>
@@ -79,8 +124,7 @@ const Findclass = () => {
               }}
               validationSchema={validationSchema}
               onSubmit={(data, { setSubmitting, resetForm }) => {
-                console.log("dataFormik", data);
-                // handleSubmit(data, { setSubmitting, resetForm });
+                handleSubmit(data,  setSubmitting, resetForm );
               }}
             >
               {({ isSubmitting, setFieldValue }) => (
@@ -112,7 +156,6 @@ const Findclass = () => {
                           border: "none",
                           background: "transparent",
                           width: "100%",
-                          // maxWidth: "30%",
                           height: "78px",
 
                           background: "#fff",
@@ -159,7 +202,7 @@ const Findclass = () => {
                       id="search"
                       name="search"
                       type="search"
-                      placeholder="Address to Postcode"
+                      placeholder="Enter City"
                       InputProps={{
                         startAdornment: (
                           <>
@@ -175,9 +218,7 @@ const Findclass = () => {
                             />
                           </>
                         ),
-                        // endAdornment: (
-
-                        // ),
+                        
                       }}
                       sx={{
                         "& .MuiOutlinedInput-root": {
@@ -199,7 +240,6 @@ const Findclass = () => {
                     />
                     
 
-                    {/* </div> */}
                     <Button
                       type="submit"
                       sx={{
@@ -207,8 +247,6 @@ const Findclass = () => {
                         height: "75px",
                         background: "#ff7002",
                         color: "#fff",
-                        // borderRadius: "10px", // Border radius
-                        // marginLeft: "10px", // Add some margin for spacing
                       }}
                       variant="contained"
                     >

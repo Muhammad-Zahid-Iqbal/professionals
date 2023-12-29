@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_BASE_URL = 'http://localhost:8000/user/api';
+const API_BASE_URL = 'https://backend.dyslexiafocus.com/user/api';
 
 function updateAuthorizationHeader() {
     const token = localStorage.getItem('token');

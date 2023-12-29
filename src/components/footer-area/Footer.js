@@ -13,6 +13,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import yourlogo from "../../images/yourlogo.png";
+import { useNavigate } from 'react-router-dom';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,6 +34,7 @@ const style = {
 }
 export default function Footer() {
     const [selectedLocation, setSelectedLocation] = React.useState('Select an Academy');
+    const navigate = useNavigate();
 
     const handleChange = (event) => {
         setSelectedLocation(event.target.value);
@@ -43,7 +45,7 @@ export default function Footer() {
             <Grid container spacing={2}>
                 <Grid item sm={3}>
                     <Div>
-                        <img style={{ paddingLeft: "25px" }} src={yourlogo} alt='footer image' />
+                        <img style={{ paddingLeft: "25px", cursor:"pointer" }} src={yourlogo} alt='footer image' onClick={() =>navigate('/')}/>
                         <Div sx={{ display: "flex", mt: 5, pl: 2.9 }}>
                             <EmailIcon style={{ color: '#ff7531' }} />
                             <p style={{ paddingLeft: 10, color: '#ff7531' }}>Make an enquiry</p>

@@ -11,7 +11,7 @@ import Backdrop from "@mui/material/Backdrop";
 import StarIcon from "@mui/icons-material/Star";
 import { postRequest } from "../../backendservices/ApiCalls";
 
-const Counsellingcard = ({ therapists, loading, pictureLink }) => {
+const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
   const maxDetailLength = 400;
   const itemsPerPage = 5;
   const maxDisplayedPages = 10;
@@ -472,4 +472,4 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
   );
 };
 
-export default Counsellingcard;
+export default FindCounsellingCard;

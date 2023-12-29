@@ -3,7 +3,6 @@ import { TextField, Button, Link, Typography, Container, CssBaseline, Grid, Box,
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import Div from '../../shared/Div';
-import logo from '../../images/darklogo.svg'
 import Alert from '@mui/material/Alert';
 import { Link as RouterLink } from 'react-router-dom';
 import { postRequest } from '../../backendservices/ApiCalls';
@@ -30,7 +29,7 @@ const Signup = () => {
     const handleCloseSignUp = () => {
         setSignUpAlert(false);
     };
-    const handleSubmit = (data, setSubmitting, resetForm) => {
+    const handleSubmit = (data, resetForm) => {
         let params = {
             firstname: data.firstname,
             lastname: data.lastname,
@@ -44,8 +43,10 @@ const Signup = () => {
             (response) => {
                 if (response?.data?.status === "success") {
                     console.log("data added successfully");
-                    setSignUpAlert(true);
                     resetForm();
+
+                    setSignUpAlert(true);
+                    console.log('Form reset');
                     setIsSubmitted(true);
                     setTimeout(() => {
                         setIsSubmitted(false);
@@ -66,9 +67,6 @@ const Signup = () => {
             
             <Container component="main" sx={{ minHeight: "110vh", display: "flex", justifyContent: "center", alignItems: "center", mt: 2,marginBottom:"60px" }}>
                 <CssBaseline />
-                {/* {alertData.show && (<SweetAlert alertData={alertData} setAlertData={setAlertData}
-                  />
-                )} */}
                 <Paper elevation={3} sx={{ padding: "10px", height: "95%", minWidth: "50%", }}>
                     <Div>
                         <Typography component="h1" variant="h5" sx={{ p: 3 }}>
@@ -84,8 +82,7 @@ const Signup = () => {
                             }}
                             validationSchema={validationSchema}
                             onSubmit={(data, { setSubmitting, resetForm }) => {
-                                console.log("dataFormik", data)
-                                handleSubmit(data, setSubmitting, resetForm);
+                                handleSubmit(data, resetForm);
                             }}
                         >
                             <Form>
@@ -182,7 +179,7 @@ const Signup = () => {
                     </Div>
                 </Paper>
             </Container >
-            <Alertdialog handleCloseSignUp={handleCloseSignUp} signupAlert={signupAlert}  setSignUpAlert={setSignUpAlert}/>
+            <Alertdialog handleClose={handleCloseSignUp} open={signupAlert}  content="You have registered successfully!" disableScrollLock={true}/>
         </>
 
 
