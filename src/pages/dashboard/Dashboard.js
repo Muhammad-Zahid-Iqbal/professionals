@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
-<<<<<<< HEAD
-import { Grid, TextField, Button, Box, Typography, FormHelperText, IconButton, Avatar, Select, InputAdornment, MenuItem, InputLabel, FormControl,
-} from "@mui/material";
-=======
 import { Grid, TextField, Button, Box, FormHelperText, IconButton, Avatar, Select, MenuItem, InputLabel, FormControl,} from "@mui/material";
->>>>>>> d99861e794ec3cd5e53a1764d68c0f5380eee707
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { postRequest } from "../../backendservices/ApiCalls";
 import { useLocation } from "react-router-dom";

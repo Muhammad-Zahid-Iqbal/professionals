@@ -45,7 +45,7 @@ export default function Footer() {
             <Grid container spacing={2}>
                 <Grid item sm={3}>
                     <Div>
-                        <img style={{ paddingLeft: "25px", cursor:"pointer" }} src={yourlogo} alt='footer image' onClick={() =>navigate('/')}/>
+                        <img style={{ paddingLeft: "25px", cursor:"pointer", width:"100%" }} src={yourlogo} alt='footer image' onClick={() =>navigate('/')}/>
                         <Div sx={{ display: "flex", mt: 5, pl: 2.9 }}>
                             <EmailIcon style={{ color: '#ff7531' }} />
                             <p style={{ paddingLeft: 10, color: '#ff7531' }}>Make an enquiry</p>

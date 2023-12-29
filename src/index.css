@@ -7,3 +7,10 @@
   .ck-editor__editable {
     min-height: 200px;
   }
+ 
+  @media screen and (max-width: 480px) {
+    .css-ds07z6 {
+      margin-top: 0px !important;
+    }
+  
+  }

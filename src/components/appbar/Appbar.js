@@ -31,45 +31,45 @@ const Appbar = (props) => {
     setMobileOpen((prevState) => !prevState);
   };
 
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" sx={{ my: 2, background:"blue" }}>
-      <img src={yourlogo} alt="logo" style={{width:"100%", cursor:"pointer"}} onClick={() =>navigate('/')}/>
-      </Typography>
-      <Divider />
-      <List>
-        <ListItem disablePadding component={Link} to="/">
-          <ListItemButton sx={{ textAlign: "center", flexDirection: "column" }}>
-            <ListItemText>FIND A CLASS</ListItemText>
-          </ListItemButton>
-        </ListItem>
+  // const drawer = (
+  //   <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+  //     <Typography variant="h6" sx={{ my: 2, background:"blue" }}>
+  //     <img src={yourlogo} alt="logo" style={{width:"100%", cursor:"pointer"}} onClick={() =>navigate('/')}/>
+  //     </Typography>
+  //     <Divider />
+  //     <List>
+  //       <ListItem disablePadding component={Link} to="/">
+  //         <ListItemButton sx={{ textAlign: "center", flexDirection: "column" }}>
+  //           <ListItemText>FIND A CLASS</ListItemText>
+  //         </ListItemButton>
+  //       </ListItem>
 
-        <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center", flexDirection: "column" }}>
-            <ListItemText>ABOUT</ListItemText>
-          </ListItemButton>
-        </ListItem>
+  //       <ListItem disablePadding>
+  //         <ListItemButton sx={{ textAlign: "center", flexDirection: "column" }}>
+  //           <ListItemText>ABOUT</ListItemText>
+  //         </ListItemButton>
+  //       </ListItem>
 
-        <ListItem disablePadding to='/counselling' component={Link}>
-          <ListItemButton sx={{ textAlign: "center", flexDirection: "column" }}>
-            <ListItemText>NEWS</ListItemText>
-          </ListItemButton>
-        </ListItem>
+  //       <ListItem disablePadding to='/counselling' component={Link}>
+  //         <ListItemButton sx={{ textAlign: "center", flexDirection: "column" }}>
+  //           <ListItemText>NEWS</ListItemText>
+  //         </ListItemButton>
+  //       </ListItem>
 
-         <ListItem disablePadding to='/sign-up' component={Link}>
-          <ListItemButton sx={{ textAlign: "center", flexDirection: "column" }}>
-            <ListItemText>JOIN US</ListItemText>
-          </ListItemButton>
-        </ListItem>
+  //        <ListItem disablePadding to='/sign-up' component={Link}>
+  //         <ListItemButton sx={{ textAlign: "center", flexDirection: "column" }}>
+  //           <ListItemText>JOIN US</ListItemText>
+  //         </ListItemButton>
+  //       </ListItem>
 
-        <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center", flexDirection: "column" }}>
-            <ListItemText>LOCATION</ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </Box>
-  );
+  //       <ListItem disablePadding>
+  //         <ListItemButton sx={{ textAlign: "center", flexDirection: "column" }}>
+  //           <ListItemText>LOCATION</ListItemText>
+  //         </ListItemButton>
+  //       </ListItem>
+  //     </List>
+  //   </Box>
+  // );
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -96,7 +96,7 @@ const Appbar = (props) => {
           </Typography>
           <Box
             sx={{
-              display: { xs: "none", sm: "block" },
+              // display: { xs: "none", sm: "block" },
               marginLeft: "auto",
               marginRight: "auto",
               textAlign: "center",
@@ -117,7 +117,7 @@ const Appbar = (props) => {
           </Box>
         </Toolbar>
       </AppBar>
-      <nav>
+      {/* <nav>
         <Drawer
           container={container}
           variant="temporary"
@@ -136,7 +136,7 @@ const Appbar = (props) => {
         >
           {drawer}
         </Drawer>
-      </nav>
+      </nav> */}
       {/* <Box component="main" sx={{ p: 0 }}>
         <Toolbar />
       </Box> */}

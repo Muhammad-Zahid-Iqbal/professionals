@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-<<<<<<< HEAD
-import { TextField, Button, Link, Typography, Container, CssBaseline, Grid, Box, FormHelperText, Paper, Alert,} from "@mui/material";
-=======
 import { TextField, Link, Typography, Container, CssBaseline, Grid, Box, FormHelperText, Paper, Alert,} from "@mui/material";
->>>>>>> d99861e794ec3cd5e53a1764d68c0f5380eee707
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import Div from "../../shared/Div";
@@ -35,6 +31,7 @@ const Login = () => {
       "/login",
       params,
       (response) => {
+        console.log("login",response)
         localStorage.setItem("token", response?.data?.token);
         if (response?.data?.status === "success") {
           console.log("data added successfully");
