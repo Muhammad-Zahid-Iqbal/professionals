@@ -22,23 +22,31 @@ const validationSchema = Yup.object({
 });
 
 const Dashboard = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
   const [ckeditorContent, setCkeditorContent] = useState("");
   const [open, setOpen] = React.useState(false);
   const [load, setLoad] = React.useState(true);
  
-  const { loginUserData, getUserData, loading, refreshUserData,} = useMyContext();
+  const { loginUserData, getUserData, loading, refreshUserData,userprofile} = useMyContext();
+  const [selectedImage, setSelectedImage] = useState('');
   const rowData = loginUserData;
+
   const [selectedLocation, setSelectedLocation] = React.useState();
   const location = useLocation();
 
   const useremail = location?.state?.useremail;
+ 
+
   useEffect(() => {
-    refreshUserData();
+    if (userprofile !== null) {
+      setSelectedImage(userprofile);
+    }
     setLoad(false);
-  }, []);
+    
+  },[userprofile]);
+
+  console.log("selectedImage",selectedImage)
   const handleChangeSelect = (event) => {
-    setSelectedLocation(event.target.value);
+    // setSelectedLocation(event.target.value);
   };
   const handleClose = () => {
     setOpen(false);
@@ -54,9 +62,26 @@ const Dashboard = () => {
       reader.onloadend = () => {
         const base64Data = reader.result;
         if (base64Data) {
-          const userKey = `selectedImage_${useremail}`;
-        localStorage.setItem(userKey, base64Data);
           setSelectedImage(base64Data);
+          let params = {
+            image: selectedImage,
+          };
+          postRequest(
+            "/updateprofilepicture",
+            params,
+            (response) => {
+              console.log("responseImage", response)
+              if (response?.data?.status === "success") {
+                setSelectedImage(response?.data?.pictureurl)
+                console.log("data added successfully");
+              } else {
+                console.log("response not getting");
+              }
+            },
+            (error) => {
+              console.log(error?.response?.data);
+            }
+          );
           console.log("Image loaded successfully!", base64Data);
         } else {
           console.log("Error loading image.");
@@ -66,20 +91,14 @@ const Dashboard = () => {
       reader.readAsDataURL(file);
     }
   };
-  useEffect(() => {
-    const userKey = `selectedImage_${useremail}`;
-  const storedImage = localStorage.getItem(userKey);
-    if (storedImage) {
-      setSelectedImage(storedImage);
-    }
-  }, []);
+  
   const handleCameraClick = () => {
     document.getElementById("fileInput").click();
   };
 
   const handleSubmit = (data, setSubmitting, resetForm) => {
     let params = {
-      image: selectedImage,
+      // image: selectedImage,
       education: data.education,
       user_type: data.type,
       email: useremail,
@@ -121,7 +140,7 @@ const Dashboard = () => {
       <>
         <Formik
           initialValues={{
-            image: selectedImage,
+            // image: selectedImage,
             name: rowData?.firstname || "",
             email: useremail || "",
             education: rowData?.education || "",

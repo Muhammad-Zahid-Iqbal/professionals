@@ -18,6 +18,8 @@ import Button from "@mui/material/Button";
 import header_trustpilot from "../../images/header_trustpilot.webp";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Link, useNavigate } from "react-router-dom";
+import yourlogo from "../../images/yourlogo.png";
+
 
 const drawerWidth = 240;
 const navItems = ["Home", "About", "Contact"];
@@ -78,19 +80,26 @@ const Appbarlogin = (props) => {
               <MenuIcon />
             </IconButton>
             <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+          >
+            <img src={yourlogo} alt="logo" style={{width:"20%", height:"70px", cursor:"pointer", width: "100px"}} onClick={() =>navigate('/')}/>
+          </Typography>
+            {/* <Typography
               variant="h6"
               component="div"
               sx={{ flexGrow: 1, mt: 2, display: { xs: "none", sm: "block" } }}
             >
               <img src={header_trustpilot} alt="logo" />
-            </Typography>
+            </Typography> */}
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
               {/* <Button sx={{ color: "#fff", m: 2 }} to="/" component={Link}> Find A Class </Button>
               <Button sx={{ color: "#fff", m: 2 }}>About</Button>
               <Button sx={{ color: "#fff", m: 2 }} to="/counselling" component={Link}> New </Button>
               <Button sx={{ color: "#fff", m: 2 }} to="/sign-up" component={Link}>Join US</Button>
               <Button sx={{ color: "#fff", m: 2 }}>Location</Button> */}
-              <Button sx={{ m: 1, color: "#ee7925", backgroundColor: "#fff", "&:hover": { backgroundColor: "#ee7925", borderColor: "#ee7925", color: "#fff",},}} variant="outlined" startIcon={<LocationOnIcon />} onClick={() =>navigate('/counselling')}> Find your nearest tutors and accessors</Button>
+              <Button sx={{ m: 1, color: "#ee7925", backgroundColor: "#fff", "&:hover": { backgroundColor: "#ee7925", borderColor: "#ee7925", color: "#fff",},}} variant="outlined" startIcon={<LocationOnIcon />} onClick={() =>navigate('/counselling')}> Find your nearest tutors and assessors</Button>
             </Box>
             <Button sx={{ m: 1, color: "#ee7925", backgroundColor: "#fff", width:"80px", "&:hover": { backgroundColor: "#ee7925", borderColor: "#ee7925", color: "#fff",},}} variant="contained" onClick={handleLoginLogout}>
               {localStorage.getItem("token") !== null ? "Logout" : "Login"}

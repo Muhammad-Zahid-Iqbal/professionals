@@ -1,46 +1,77 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, FormControl, Grid, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Toppng from "../../images/top.png";
 import Bottompng from "../../images/bottom.png";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import Div from "../../shared/Div";
 import { postRequest } from "../../backendservices/ApiCalls";
 import { useNavigate } from "react-router-dom";
+import AlertDialog from "../../components/AlertDiaolog/Alertdialog";
 
 const validationSchema = Yup.object({
-  search: Yup.string().required('Address to postcode'),
+  search: Yup.string().required("Address to postcode"),
 });
 
 const Findclass = () => {
   const [selectedLocation, setSelectedLocation] = React.useState("tutors");
   const [usersProfileData, setUsersProfileData] = useState([]);
   const [pictureLink, setPictureLink] = useState();
+  const [signupAlert, setSignUpAlert] = useState(false);
+
+  // const isMobile = useMediaQuery({ maxWidth: 480 });
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleChangeSelect = (event) => {
     setSelectedLocation(event.target.value);
   };
+
+  const handleCloseSignUp = () => {
+    setSignUpAlert(false);
+};
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const handleSubmit = (data, setSubmitting, resetForm) => {
     let params = {
       user_type: selectedLocation,
-      city:data.search
-      
+      city: data.search,
     };
     postRequest(
       "/getsearchdata",
       params,
       (response) => {
-        console.log("getsearchdataRes", response)
+        console.log("getsearchdataRes", response);
         if (response?.data?.status === "success") {
           setLoading(true);
           setUsersProfileData(response?.data?.data);
           setPictureLink(response?.data?.profilePicLink);
           setLoading(false);
           console.log("State after setting data:", usersProfileData, loading);
-
+          if (response?.data?.data?.length === 0) {
+            // No data found for the entered city
+            setSignUpAlert(true);
+          }
           // navigate("/find-counselling", {
           //   state: {
           //     usersProfileData,loading
@@ -49,29 +80,27 @@ const Findclass = () => {
         } else {
           console.log("response not getting");
           setLoading(false);
-
         }
       },
       (error) => {
         console.log(error?.response?.data);
         setLoading(false);
-
       }
     );
   };
-  console.log("usersProfileData", usersProfileData)
+  console.log("usersProfileData", usersProfileData);
   useEffect(() => {
     if (usersProfileData.length > 0) {
       navigate("/find-counselling", {
         state: {
           usersProfileData,
           loading,
-          pictureLink
+          pictureLink,
         },
       });
     }
   }, [usersProfileData, loading]);
-  
+
   return (
     <>
       <Box sx={{ background: "#f2f2f2" }}>
@@ -91,8 +120,12 @@ const Findclass = () => {
               <Typography
                 variant="h1"
                 sx={{
-                  fontSize: "36px",
-                  fontSize: "40px",
+                  fontSize: {
+                    xs: "24px", // Change this value based on your preference for mobile devices
+                    sm: "36px",
+                    md: "40px",
+                  },
+                  // fontSize: "40px",
                   fontWeight: 800,
                   marginLeft: "15%",
                   paddingTop: "20%",
@@ -106,6 +139,7 @@ const Findclass = () => {
               </Typography>
               <Typography
                 sx={{
+                  
                   alignItem: "center",
                   fontSize: "20px",
                   fontWeight: 600,
@@ -120,62 +154,34 @@ const Findclass = () => {
             <Formik
               initialValues={{
                 type: selectedLocation,
-                search: '',
+                search: "",
               }}
               validationSchema={validationSchema}
               onSubmit={(data, { setSubmitting, resetForm }) => {
-                handleSubmit(data,  setSubmitting, resetForm );
+                handleSubmit(data, setSubmitting, resetForm);
               }}
             >
               {({ isSubmitting, setFieldValue }) => (
                 <Form>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginTop: "10%",
-                      width: "90%",
-                      // border:"1px solid red",
-                      marginLeft: "10%",
-                      borderRadius: "30px",
-                      overflow: "hidden",
-                    }}
-                  >
+                  <Box className="find_class_parent">
                     <FormControl fullWidth>
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        inputProps={{MenuProps: {disableScrollLock: true}}}
+                        className="find_select"
+                        inputProps={{ MenuProps: { disableScrollLock: true } }}
                         name="type"
                         value={selectedLocation}
                         sx={{
-                          color: "gray",
-                          fontSize: "18px",
-                          outline: "none",
-                          border: "none",
-                          background: "transparent",
-                          width: "100%",
-                          height: "78px",
-
-                          background: "#fff",
-                          padding: "10px", // Padding
-                          backgroundImage: `url('https://c.superprof.com/style/images/home/v4/book-new-off.svg')`, // Replace with your image URL
-                          backgroundRepeat: "no-repeat",
-                          backgroundPosition: "10px center", // Adjust the position as needed
-                          paddingLeft: "40px",
-                          appearance: "none",
-                          position: "relative",
-                          boxShadow: "none",
                           ".MuiOutlinedInput-notchedOutline": { border: 0 },
                           "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                          {
-                            border: 0,
-                          },
+                            {
+                              border: 0,
+                            },
                           "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                          {
-                            border: 0,
-                          },
+                            {
+                              border: 0,
+                            },
                         }}
                         IconComponent={() => null}
                         onChange={(event) => {
@@ -188,16 +194,21 @@ const Findclass = () => {
                         <MenuItem value="assessors">Assessors</MenuItem>
                       </Select>
                     </FormControl>
-                    <div
-                      style={{
-                        borderLeft: "1px solid gray",
-                        height: "40px",
-                        background: "#fff"
-                      }}
-                    ></div>
+                    {isMobile ? // This will render when the screen width is 480 pixels or less
+                    null : (
+                      // This will render when the screen width is greater than 480 pixels
+                      <div
+                        style={{
+                          borderLeft: "1px solid gray",
+                          height: "40px",
+                          background: "#fff",
+                          margin: "auto",
+                        }}
+                      ></div>
+                    )}
 
                     <Field
-                    as ={TextField}
+                      as={TextField}
                       fullWidth
                       id="search"
                       name="search"
@@ -209,23 +220,18 @@ const Findclass = () => {
                             <img
                               src="https://icones.pro/wp-content/uploads/2021/02/icone-de-localisation-grise.png"
                               alt="Search Icon"
-                              style={{
-                                height: "34px",
-                                width: "50px",
-                                marginRight: "5px",
-                                filter: "grayscale(100%)",
-                              }}
+                              className="location_icon"
                             />
                           </>
                         ),
-                        
                       }}
                       sx={{
                         "& .MuiOutlinedInput-root": {
-                          padding: "10px", // Padding
+                          // padding: "10px", // Padding
+                          height: { sm: 78, xs: 70 },
                           background: "#fff", // Background color
                           position: "relative",
-                          width: "100%"
+                          width: "100%",
                         },
                         "& .MuiOutlinedInput-notchedOutline": {
                           border: "none",
@@ -238,26 +244,25 @@ const Findclass = () => {
                         },
                       }}
                     />
-                    
 
                     <Button
                       type="submit"
-                      sx={{
-                        minWidth: "18%",
-                        height: "75px",
-                        background: "#ff7002",
-                        color: "#fff",
-                      }}
+                      className="search_button"
                       variant="contained"
                     >
                       Search
                     </Button>
                   </Box>
-                  <Div style={{display:"flex", justifyContent:"center", paddingLeft:"30%", color:"red"}}>
-                  <ErrorMessage name="search" component="div"  />
-
+                  <Div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      paddingLeft: "30%",
+                      color: "red",
+                    }}
+                  >
+                    <ErrorMessage name="search" component="div" />
                   </Div>
-
                 </Form>
               )}
             </Formik>
@@ -342,6 +347,8 @@ const Findclass = () => {
           }
         `}
       </style>
+      <AlertDialog handleClose={handleCloseSignUp} open={signupAlert}  content="City not found. Please enter a valid city.!" disableScrollLock={true}/>
+
     </>
   );
 };

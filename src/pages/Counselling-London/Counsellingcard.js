@@ -10,6 +10,8 @@ import { Fade, Modal, Rating } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import StarIcon from "@mui/icons-material/Star";
 import { postRequest } from "../../backendservices/ApiCalls";
+import CancelIcon from '@mui/icons-material/Cancel';
+
 
 const Counsellingcard = ({ therapists, loading, pictureLink }) => {
   const maxDetailLength = 400;
@@ -24,7 +26,6 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
     setOpen(true);
     setUserID(userid);
   };
-  console.log("therapists",therapists)
   const user =
     therapists && therapists.find((user) => user.id === parseInt(userID, 10));
   const handleClose = () => setOpen(false);
@@ -137,14 +138,14 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
     <>
       <Box
         sx={{
-          width: "73%",
-          position: "relative",
-          margin: "auto",
-          overflow: { xs: "auto", sm: "initial" },
+          // width: "73%",
+          // position: "relative",
+          marginTop: "30px",
+          // overflow: { xs: "auto", sm: "initial" },
           mb: 5,
         }}
       >
-        <Grid item>
+        <Grid container sm={10} xs={12} margin={"auto"}>
           <Div sx={{ padding: "20px" }}>
             <h1>Counselling in London</h1>
           </Div>
@@ -226,7 +227,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                       style={{ color: "blue", cursor: "pointer" }}
                       onClick={() =>
                         navigate(`/user-detail/${value.id}`, {
-                          state: { therapists, pictureLink, loading },
+                          state: { therapists, pictureLink, loading, userID },
                         })
                       }
                     >
@@ -266,7 +267,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
               </CardContent>
             </Card>
           ))}
-          <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+          <Box sx={{ margin:"auto", marginTop: 2 }}>
             <Button
               variant="contained"
               sx={{ margin: "0 5px", border: "1px solid lightgray" }}
@@ -311,8 +312,8 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
             }}
           >
             <Fade in={open}>
-              <Box sx={style}>
-                <Grid item>
+              {/* <Box sx={style}> */}
+                <Grid container sm={10} xs={12} margin={"auto"}>
                   <Card
                     orientation="horizontal"
                     sx={{
@@ -330,6 +331,8 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                       },
                     }}
                   >
+              <Typography sx={{position:"absolute",  right:0, top:0}} onClick = {()=>handleClose()}><CancelIcon sx={{fontSize:"40px"}}/></Typography>
+
                     <Box
                       flex={1}
                       minHeight={250}
@@ -396,7 +399,12 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                     </CardContent>
                     <CardContent sx={{ flex: "10%" }}>
                       <h1>{user?.mobile}</h1>
-                      <Button
+                      <Div style={{paddingTop:50}}>
+                        <h4 >Email:</h4>
+                      <Typography >{user?.email}</Typography>
+                      </Div>
+                      
+                      {/* <Button
                         variant="contained"
                         color="primary"
                         sx={{
@@ -408,8 +416,8 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                         }}
                       >
                         Email
-                      </Button>
-                      <Button
+                      </Button> */}
+                      {/* <Button
                         variant="contained"
                         color="primary"
                         sx={{
@@ -421,16 +429,19 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                         }}
                       >
                         View
-                      </Button>
+                      </Button> */}
                     </CardContent>
                   </Card>
                   <>
-                    <Card>
+                  <Grid container sm={12} xs={12} margin={"auto"}>
+                     <Card sx={{width:"100%"}}>
                       <h3>Reviews: </h3>
                     </Card>
+                  </Grid>
+                   
                     {!isLoading && reviewData?.map(row => (
                       row.userid === userID && (
-                    <Card key={row?.id}>
+                    <Card key={row?.id} sx={{width:"100%"}}>
                       <Rating
                         name="text-feedback"
                         value={row?.rating}
@@ -463,7 +474,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                     ))}
                   </>
                 </Grid>
-              </Box>
+              {/* </Box> */}
             </Fade>
           </Modal>
         </Grid>

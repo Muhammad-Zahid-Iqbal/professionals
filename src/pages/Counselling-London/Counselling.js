@@ -12,6 +12,7 @@ const Counselling = () => {
       '/getallusers',
       "",
       (response) => {
+        console.log("getallusersRespons", response)
         setLoading(true);
         if (response?.data?.status === 'success') {
           setUsersProfileData(response?.data?.data);

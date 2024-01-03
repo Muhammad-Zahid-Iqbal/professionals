@@ -6,6 +6,7 @@ const CustomProvider = createContext();
 // Context Provider component
 export const MyContextProvider = ({ children }) => {
   const [loginUserData, setLoginUserData] = useState();
+  const [userprofile, setUserProfile] = useState();
   const [loading,setLoading]=useState(false)
   
   const getUserData = () => {
@@ -13,7 +14,9 @@ export const MyContextProvider = ({ children }) => {
       (response) => {
         setLoading(true);
         setLoginUserData(response?.data?.data);
+        setUserProfile(response?.data?.data?.profilepictureurl);
         setLoading(false)
+        console.log("response?.data?.profilepictureurl",response?.data?.data?.profilepictureurl)
       },
       (error) => {
         console.log(error?.response?.data);
@@ -32,7 +35,7 @@ export const MyContextProvider = ({ children }) => {
     getUserData();
   };
 
-  const contextValue = { loginUserData, setLoginUserData, getUserData, loading, refreshUserData };
+  const contextValue = { loginUserData, setLoginUserData, getUserData, loading, refreshUserData, userprofile };
 
   return <CustomProvider.Provider value={contextValue}>{children}</CustomProvider.Provider>;
 };

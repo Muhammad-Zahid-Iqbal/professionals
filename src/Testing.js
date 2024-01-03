@@ -7,6 +7,7 @@ import Select from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { styled } from '@mui/system';
 import { css } from '@emotion/react';
+import { TextField } from '@mui/material';
 
 const StyledOutlinedInput = styled(OutlinedInput)`
   ${({ theme }) => css`
@@ -25,6 +26,7 @@ export default function Testing() {
   };
 
   return (
+    <>
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Age</InputLabel>
@@ -53,5 +55,19 @@ export default function Testing() {
         </Select>
       </FormControl>
     </Box>
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '25ch' },
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+      <TextField id="filled-basic" label="Filled" variant="filled" />
+      <TextField id="standard-basic" label="Standard" variant="standard" />
+    </Box>
+    </>
+    
   );
 }

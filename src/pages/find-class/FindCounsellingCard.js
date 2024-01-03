@@ -10,6 +10,7 @@ import { Fade, Modal, Rating } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import StarIcon from "@mui/icons-material/Star";
 import { postRequest } from "../../backendservices/ApiCalls";
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
   const maxDetailLength = 400;
@@ -137,14 +138,14 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
     <>
       <Box
         sx={{
-          width: "73%",
-          position: "relative",
-          margin: "auto",
-          overflow: { xs: "auto", sm: "initial" },
+          // width: "73%",
+          // position: "relative",
+          marginTop: "30px",
+          // overflow: { xs: "auto", sm: "initial" },
           mb: 5,
         }}
       >
-        <Grid item>
+        <Grid container sm={10} xs={12} margin={"auto"}>
           <Div sx={{ padding: "20px" }}>
             <h1>Counselling in London</h1>
           </Div>
@@ -266,7 +267,7 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
               </CardContent>
             </Card>
           ))}
-          <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2, margin:"auto" }}>
             <Button
               variant="contained"
               sx={{ margin: "0 5px", border: "1px solid lightgray" }}
@@ -311,8 +312,8 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
             }}
           >
             <Fade in={open}>
-              <Box sx={style}>
-                <Grid item>
+              {/* <Box sx={style}> */}
+                <Grid container sm={10} xs={12} margin={"auto"}>
                   <Card
                     orientation="horizontal"
                     sx={{
@@ -330,6 +331,8 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
                       },
                     }}
                   >
+              <Typography sx={{position:"absolute",  right:0, top:0}} onClick = {()=>handleClose()}><CancelIcon sx={{fontSize:"40px"}}/></Typography>
+
                     <Box
                       flex={1}
                       minHeight={250}
@@ -425,12 +428,12 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
                     </CardContent>
                   </Card>
                   <>
-                    <Card>
+                    <Card sx={{width:"100%"}}>
                       <h3>Reviews: </h3>
                     </Card>
                     {!isLoading && reviewData?.map(row => (
                       row.userid === userID && (
-                    <Card key={row?.id}>
+                    <Card key={row?.id} sx={{width:"100%"}}>
                       <Rating
                         name="text-feedback"
                         value={row?.rating}
@@ -463,7 +466,7 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
                     ))}
                   </>
                 </Grid>
-              </Box>
+              {/* </Box> */}
             </Fade>
           </Modal>
         </Grid>

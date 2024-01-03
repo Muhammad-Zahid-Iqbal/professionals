@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Card from "@mui/joy/Card";
@@ -6,31 +6,84 @@ import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/material/Typography";
 import { Button, Grid } from "@mui/joy";
 import Div from "../../shared/Div";
-
+import { postRequest } from "../../backendservices/ApiCalls";
+import { Rating } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
 
 const UserDetail = () => {
+  const [userID, setUserID] = React.useState("");
+  const [reviewData, setReviewData] = useState([]);
+  console.log("reviewData", reviewData);
+  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
-  const location =  useLocation();
+  const location = useLocation();
   const therapists = location.state.therapists;
   const pictureLink = location.state.pictureLink;
   const loading = location.state.loading;
-  const user = therapists && therapists.find((user) => user.id === parseInt(id, 10));
+  const user =
+    therapists && therapists.find((user) => user.id === parseInt(id, 10));
+
+  const AverageRating = ({ value }) => {
+    return (
+      <Rating
+        name="average-rating"
+        value={value}
+        readOnly
+        precision={0.5}
+        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+      />
+    );
+  };
+  const averageRating = () => {
+    const totalRating = reviewData.reduce((sum, row) => sum + row.rating, 0);
+    const average = totalRating / reviewData.length;
+    return isNaN(average) ? 0 : average; // Avoid NaN if there are no reviews
+  };
+
+  const GetReviews = () => {
+    let param = {
+      userid: id,
+    };
+    postRequest(
+      "/getreviews",
+      param,
+      (response) => {
+        setIsLoading(true);
+        if (response?.data?.status === "success") {
+          setReviewData(response?.data?.data);
+        }
+        setIsLoading(false);
+      },
+      (error) => {
+        console.log(error?.response?.data);
+        setIsLoading(false);
+      }
+    );
+  };
+
+  useEffect(() => {
+    GetReviews();
+  }, []);
 
   if (!user && loading) {
     return <div>User not found</div>;
   }
+
+  if (isLoading) {
+    return <h1>Loading ...</h1>;
+  }
   return (
     <>
       <Box
-        sx={{
-          width: "73%",
-          position: "relative",
-          margin: "auto",
-          overflow: { xs: "auto", sm: "initial" },
-          mb: 5,
-        }}
+      // sx={{
+      //   width: "73%",
+      //   position: "relative",
+      //   margin: "auto",
+      //   overflow: { xs: "auto", sm: "initial" },
+      //   mb: 5,
+      // }}//
       >
-        <Grid item>
+        <Grid container sm={10} xs={12} margin={"auto"}>
           <Div sx={{ padding: "20px" }}>
             <h1>Counselling in London</h1>
           </Div>
@@ -77,6 +130,12 @@ const UserDetail = () => {
               >
                 {user?.firstname}
               </h2>
+              <Typography>
+                Average Rating:
+                {reviewData[0]?.userid === parseInt(id, 10) && (
+                  <AverageRating value={averageRating()} />
+                )}
+              </Typography>
               <Typography
                 level="body-sm"
                 fontWeight="lg"
@@ -132,7 +191,52 @@ const UserDetail = () => {
               </Button>
             </CardContent>
           </Card>
+         
         </Grid>
+        <Grid container sm={10} xs={12} margin={"auto"} paddingBottom={4}>
+        <>
+            <Card sx={{width:"100%"}}>
+              <h3>Reviews: </h3>
+            </Card>
+            {!isLoading &&
+              reviewData &&
+              reviewData?.map(
+                (row) => (
+                  row.userid === parseInt(id, 10) && (
+                    <Card key={row?.id} sx={{width:"100%",}}>
+                      <Rating
+                        name="text-feedback"
+                        value={row?.rating}
+                        readOnly
+                        precision={0.5}
+                        emptyIcon={
+                          <StarIcon
+                            style={{ opacity: 0.55 }}
+                            fontSize="inherit"
+                          />
+                        }
+                      />
+                      <Typography variant="h5" component="div">
+                        {row?.sender_name}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "17px",
+                          fontFamily:
+                            "Proxima Nova,Open Sans,Helvetica Neue,Arial,sans-serif",
+                        }}
+                        dangerouslySetInnerHTML={{
+                          __html: row?.detail
+                            .replace(/\\n/g, "")
+                            .replace(/\\/g, ""),
+                        }}
+                      />
+                    </Card>
+                  )
+                )
+              )}
+          </>
+          </Grid>
       </Box>
     </>
   );

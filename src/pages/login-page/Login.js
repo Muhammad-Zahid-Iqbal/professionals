@@ -22,7 +22,8 @@ const Login = () => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
-  const handleSubmit = (data, resetForm) => {
+  
+  const handleSubmit = (data, resetForm, setSubmitting) => {
     let params = {
       email: data.email,
       password: data.password,
@@ -37,6 +38,7 @@ const Login = () => {
           console.log("data added successfully");
           resetForm();
           setIsSubmitted(true);
+          setSubmitting(true);
           setLoginUserData(response?.data?.user);
           refreshUserData();
 
@@ -48,12 +50,18 @@ const Login = () => {
               },
             });
           }, 1000);
-        } else {
-          console.log("response not getting");
+        } else if (response?.data?.status === "error") {
+          
+          alert(response?.data?.message || "Login failed"); // Display the error message received from the server
+          navigate("/login");
+          setIsSubmitted(false);
+          setSubmitting(false);
         }
       },
       (error) => {
         console.log(error?.response?.data);
+        setIsSubmitted(false);
+        setSubmitting(false);
       }
     );
   };
@@ -63,7 +71,7 @@ const Login = () => {
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <img src={logo} alt="logo header" style={{ width: "15%" }} />
       </Box>
-      <Grid container 
+      <Grid container sm={4} margin={"auto"} textAlign={"center"}
         // component="main"
         sx={{
           // height: "95vh",
@@ -76,7 +84,7 @@ const Login = () => {
       >
         <CssBaseline />
         <Paper
-          elevation={3}
+          elevation={3} sx={{width:"98%"}}
           // sx={{ padding: "10px", height: "80%", minWidth: "20vw" }}
         >
           {isSubmitted && (
@@ -153,8 +161,8 @@ const Login = () => {
               )}
             </Formik>
 
-            <Grid container>
-              <Grid item sm={6} marginLeft={3} xs>
+            <Grid container sx={{display:"flex", flexDirection:"column"}}>
+              <Grid item>
                 <Link
                   href="#"
                   sx={{
@@ -168,9 +176,9 @@ const Login = () => {
               </Grid>
               <Grid item p={3}>
                 {" "}
-                DON'T HAVE AN ACCOUNT?
+                Don't have an account?
                 <Link to="/sign-up" component={RouterLink} variant="body2">
-                  SIGN UP HERE
+                  Sign up here
                 </Link>
               </Grid>
             </Grid>

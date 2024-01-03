@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import Div from '../../shared/Div';
 import Alert from '@mui/material/Alert';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { postRequest } from '../../backendservices/ApiCalls';
 import Alertdialog from '../../components/AlertDiaolog/Alertdialog';
 
@@ -12,11 +12,7 @@ const validationSchema = yup.object({
     firstname: yup.string().required('First Name is required'),
     lastname: yup.string().required('Last Name is required'),
     email: yup.string('Enter email').email('Invalid email').required('Email is required'),
-    password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters')
-    .matches(
-      /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-zA-Z])/,
-      'Password must contain at least one number, one symbol, and one letter'
-    ),
+    password: yup.string().required('Password is required'),
       confirm_password: yup.string()
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     .required('Confirm Password is required'),
@@ -26,6 +22,8 @@ const validationSchema = yup.object({
 const Signup = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [signupAlert, setSignUpAlert] = useState(false);
+    const navigate = useNavigate();
+
     const handleCloseSignUp = () => {
         setSignUpAlert(false);
     };
@@ -36,7 +34,6 @@ const Signup = () => {
             email: data.email,
             password: data.password
         }
-        console.log("params", params)
         postRequest(
             "/register",
             params,
@@ -46,10 +43,10 @@ const Signup = () => {
                     resetForm();
 
                     setSignUpAlert(true);
-                    console.log('Form reset');
                     setIsSubmitted(true);
                     setTimeout(() => {
                         setIsSubmitted(false);
+                    navigate('/login');
                     }, 3000);
                 } else {
                     console.log("response not getting")
@@ -65,9 +62,19 @@ const Signup = () => {
     return (
         <>
             
-            <Container component="main" sx={{ minHeight: "110vh", display: "flex", justifyContent: "center", alignItems: "center", mt: 2,marginBottom:"60px" }}>
+            <Grid container sm={4} margin={"auto"} textAlign={"center"}
+        // component="main"
+        sx={{
+          // height: "95vh",
+          padding:"25px 0px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          // minWidth:"50vw"//
+        }}>
                 <CssBaseline />
-                <Paper elevation={3} sx={{ padding: "10px", height: "95%", minWidth: "50%", }}>
+                <Paper elevation={3} sx={{width:"98%"}}>
+                {/* sx={{ padding: "10px", height: "95%", minWidth: "50%", }} */}
                     <Div>
                         <Typography component="h1" variant="h5" sx={{ p: 3 }}>
                             SIGN UP
@@ -171,14 +178,14 @@ const Signup = () => {
 
                             </Form>
                         </Formik>
-                        <Grid item p={3} > ALREADY HAVE AN ACCOUNT?
+                        <Grid item p={3} > Already have an account?
                             <Link to='/login' component={RouterLink} variant="body2">
-                                LOGIN
+                                Login
                             </Link>
                         </Grid>
                     </Div>
                 </Paper>
-            </Container >
+            </Grid >
             <Alertdialog handleClose={handleCloseSignUp} open={signupAlert}  content="You have registered successfully!" disableScrollLock={true}/>
         </>
 
