@@ -71,7 +71,7 @@ export default function Footer() {
               sx={{ margin:"auto", display: "flex", justifyContent: "center", display:"flex", gap:10}}
             >
                   <p>About Us</p>
-                  <p>Join Us</p>
+                  <p onClick={()=>navigate('/sign-up')} style={{cursor:"pointer"}}>Join Us</p>
                   <p>News</p>
             </Grid>
 

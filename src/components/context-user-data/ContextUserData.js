@@ -35,7 +35,7 @@ export const MyContextProvider = ({ children }) => {
     getUserData();
   };
 
-  const contextValue = { loginUserData, setLoginUserData, getUserData, loading, refreshUserData, userprofile };
+  const contextValue = { loginUserData, setLoginUserData, getUserData, loading, refreshUserData, userprofile, setLoading };
 
   return <CustomProvider.Provider value={contextValue}>{children}</CustomProvider.Provider>;
 };

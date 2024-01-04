@@ -29,7 +29,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
   const user =
     therapists && therapists.find((user) => user.id === parseInt(userID, 10));
   const handleClose = () => setOpen(false);
-
+console.log("user", user)
   const navigate = useNavigate();
 
   const totalPages = Math.ceil(therapists?.length / itemsPerPage);
@@ -147,7 +147,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
       >
         <Grid container sm={10} xs={12} margin={"auto"}>
           <Div sx={{ padding: "20px" }}>
-            <h1>Counselling in London</h1>
+            <h1>Tutors & Assessors</h1>
           </Div>
           {therapists?.slice(startIndex, endIndex).map((value, index) => (
             <Card
@@ -157,6 +157,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
               sx={{
                 flexWrap: "wrap",
                 marginBottom: "5px",
+                width:"100%",
                 [`& > *`]: {
                   "--stack-point": "500px",
                   minWidth:
@@ -310,6 +311,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                 timeout: 500,
               },
             }}
+            sx={{overflowY:"scroll"}}
           >
             <Fade in={open}>
               {/* <Box sx={style}> */}
@@ -319,6 +321,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                     sx={{
                       flexWrap: "wrap",
                       marginBottom: "5px",
+                      width:"100%",
                       [`& > *`]: {
                         "--stack-point": "500px",
                         minWidth:
@@ -331,7 +334,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                       },
                     }}
                   >
-              <Typography sx={{position:"absolute",  right:0, top:0}} onClick = {()=>handleClose()}><CancelIcon sx={{fontSize:"40px"}}/></Typography>
+              <Typography sx={{position:"absolute",  right:0, top:0}}><CancelIcon sx={{fontSize:"30px"}} onClick = {()=>handleClose()}/></Typography>
 
                     <Box
                       flex={1}
@@ -402,6 +405,14 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
                       <Div style={{paddingTop:50}}>
                         <h4 >Email:</h4>
                       <Typography >{user?.email}</Typography>
+                      </Div>
+                      <Div style={{paddingTop:50}}>
+                        <h4 >Address:</h4>
+                      <Typography >{user?.address}</Typography>
+                      </Div>
+                      <Div style={{paddingTop:50}}>
+                        <h4 >Postcode:</h4>
+                      <Typography >{user?.postcode}</Typography>
                       </Div>
                       
                       {/* <Button

@@ -19,11 +19,11 @@ import { useNavigate } from "react-router-dom";
 import AlertDialog from "../../components/AlertDiaolog/Alertdialog";
 
 const validationSchema = Yup.object({
-  search: Yup.string().required("Address to postcode"),
+  search: Yup.string().required("Enter Postcode"),
 });
 
 const Findclass = () => {
-  const [selectedLocation, setSelectedLocation] = React.useState("tutors");
+  const [selectedLocation, setSelectedLocation] = React.useState("Tutors");
   const [usersProfileData, setUsersProfileData] = useState([]);
   const [pictureLink, setPictureLink] = useState();
   const [signupAlert, setSignUpAlert] = useState(false);
@@ -91,11 +91,12 @@ const Findclass = () => {
   console.log("usersProfileData", usersProfileData);
   useEffect(() => {
     if (usersProfileData.length > 0) {
-      navigate("/find-counselling", {
+      navigate("/Tutor.Assessors", {
         state: {
           usersProfileData,
           loading,
           pictureLink,
+          selectedLocation
         },
       });
     }
@@ -104,7 +105,7 @@ const Findclass = () => {
   return (
     <>
       <Box sx={{ background: "#f2f2f2" }}>
-        <Grid container sx={{ minHeight: "600px" }}>
+        <Grid container sx={{ minHeight: "700px" }}>
           <Grid item sm={6} xs={12}>
             <Grid
               item
@@ -135,7 +136,7 @@ const Findclass = () => {
                     "Buenos Aires, Pulp, OpenSans, 'Open Sans', sans-serif",
                 }}
               >
-                Find your Nearest Assessors and Tutors
+                Find a Qualified Dyslexia Tutors or Assessors near you
               </Typography>
               <Typography
                 sx={{
@@ -147,8 +148,21 @@ const Findclass = () => {
                   paddingTop: "2%",
                 }}
               >
-                ✅ Check reviews, chat with our tutors, and book lessons all in
-                one place 🎉
+                 Dyslexia Focus provides you with the ability to search for qualified and experienced Tutors and Assessors in your area 
+              </Typography>
+              <Typography
+                sx={{
+                  
+                  alignItem: "center",
+                  fontSize: "16px",
+                  fontWeight: 500,
+                  paddingLeft: "15%",
+                  paddingTop: "2%",
+                  marginTop:"8%",
+                  color:"gray"
+                }}
+              >
+                 Simply select which service you require & type in your postcode to search Assessors and Tutors near you 
               </Typography>
             </Grid>
             <Formik
@@ -190,8 +204,8 @@ const Findclass = () => {
                         }}
                         required
                       >
-                        <MenuItem value="tutors">Tutors</MenuItem>
-                        <MenuItem value="assessors">Assessors</MenuItem>
+                        <MenuItem value="Tutors">Tutors</MenuItem>
+                        <MenuItem value="Assessors">Assessors</MenuItem>
                       </Select>
                     </FormControl>
                     {isMobile ? // This will render when the screen width is 480 pixels or less
@@ -213,7 +227,7 @@ const Findclass = () => {
                       id="search"
                       name="search"
                       type="search"
-                      placeholder="Enter City"
+                      placeholder="Enter Postcode"
                       InputProps={{
                         startAdornment: (
                           <>
@@ -347,7 +361,7 @@ const Findclass = () => {
           }
         `}
       </style>
-      <AlertDialog handleClose={handleCloseSignUp} open={signupAlert}  content="City not found. Please enter a valid city.!" disableScrollLock={true}/>
+      <AlertDialog handleClose={handleCloseSignUp} open={signupAlert}  content="Postcode not found. Please enter a valid Postcode!" disableScrollLock={true}/>
 
     </>
   );

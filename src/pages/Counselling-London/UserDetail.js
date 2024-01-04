@@ -19,6 +19,7 @@ const UserDetail = () => {
   const location = useLocation();
   const therapists = location.state.therapists;
   const pictureLink = location.state.pictureLink;
+  const selectedLocation = location.state.selectedLocation;
   const loading = location.state.loading;
   const user =
     therapists && therapists.find((user) => user.id === parseInt(id, 10));
@@ -85,7 +86,7 @@ const UserDetail = () => {
       >
         <Grid container sm={10} xs={12} margin={"auto"}>
           <Div sx={{ padding: "20px" }}>
-            <h1>Counselling in London</h1>
+            <h1>{selectedLocation?  selectedLocation : "Counselling"} in London</h1>
           </Div>
           <Card
             orientation="horizontal"
@@ -163,7 +164,7 @@ const UserDetail = () => {
             </CardContent>
             <CardContent sx={{ flex: "10%" }}>
               <h1>{user?.mobile}</h1>
-              <Button
+              {/* <Button
                 variant="contained"
                 color="primary"
                 sx={{
@@ -188,7 +189,19 @@ const UserDetail = () => {
                 }}
               >
                 View
-              </Button>
+              </Button> */}
+              <Div style={{paddingTop:50}}>
+                        <h4 >Email:</h4>
+                      <Typography >{user?.email}</Typography>
+                      </Div>
+                      <Div style={{paddingTop:50}}>
+                        <h4 >Address:</h4>
+                      <Typography >{user?.address}</Typography>
+                      </Div>
+                      <Div style={{paddingTop:50}}>
+                        <h4 >Postcode:</h4>
+                      <Typography >{user?.postcode}</Typography>
+                      </Div>
             </CardContent>
           </Card>
          

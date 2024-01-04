@@ -12,7 +12,7 @@ import StarIcon from "@mui/icons-material/Star";
 import { postRequest } from "../../backendservices/ApiCalls";
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
+const FindCounsellingCard = ({ therapists, loading, pictureLink,selectedLocation }) => {
   const maxDetailLength = 400;
   const itemsPerPage = 5;
   const maxDisplayedPages = 10;
@@ -147,7 +147,7 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
       >
         <Grid container sm={10} xs={12} margin={"auto"}>
           <Div sx={{ padding: "20px" }}>
-            <h1>Counselling in London</h1>
+            <h1>{selectedLocation? selectedLocation : "Tutors & Assessors"}</h1>
           </Div>
           {therapists?.slice(startIndex, endIndex).map((value, index) => (
             <Card
@@ -157,6 +157,7 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
               sx={{
                 flexWrap: "wrap",
                 marginBottom: "5px",
+                width:"100%",
                 [`& > *`]: {
                   "--stack-point": "500px",
                   minWidth:
@@ -227,7 +228,7 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
                       style={{ color: "blue", cursor: "pointer" }}
                       onClick={() =>
                         navigate(`/user-detail/${value.id}`, {
-                          state: { therapists, pictureLink, loading },
+                          state: { therapists, pictureLink, loading, selectedLocation },
                         })
                       }
                     >
@@ -310,10 +311,16 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
                 timeout: 500,
               },
             }}
+            sx={{overflowY:"scroll"}}
           >
             <Fade in={open}>
               {/* <Box sx={style}> */}
                 <Grid container sm={10} xs={12} margin={"auto"}>
+                  {/* <Card sx={{width:"100%"}}>
+                  <Div>
+            <h1>{selectedLocation} in London</h1>
+          </Div>
+                  </Card> */}
                   <Card
                     orientation="horizontal"
                     sx={{
@@ -331,7 +338,7 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
                       },
                     }}
                   >
-              <Typography sx={{position:"absolute",  right:0, top:0}} onClick = {()=>handleClose()}><CancelIcon sx={{fontSize:"40px"}}/></Typography>
+              <Typography sx={{position:"absolute",  right:0, top:0}} ><CancelIcon sx={{fontSize:"30px"}} onClick = {()=>handleClose()}/></Typography>
 
                     <Box
                       flex={1}
@@ -399,7 +406,7 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
                     </CardContent>
                     <CardContent sx={{ flex: "10%" }}>
                       <h1>{user?.mobile}</h1>
-                      <Button
+                      {/* <Button
                         variant="contained"
                         color="primary"
                         sx={{
@@ -424,7 +431,19 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink }) => {
                         }}
                       >
                         View
-                      </Button>
+                      </Button> */}
+                      <Div style={{paddingTop:50}}>
+                        <h4 >Email:</h4>
+                      <Typography >{user?.email}</Typography>
+                      </Div>
+                      <Div style={{paddingTop:50}}>
+                        <h4 >Address:</h4>
+                      <Typography >{user?.address}</Typography>
+                      </Div>
+                      <Div style={{paddingTop:50}}>
+                        <h4 >Postcode:</h4>
+                      <Typography >{user?.postcode}</Typography>
+                      </Div>
                     </CardContent>
                   </Card>
                   <>

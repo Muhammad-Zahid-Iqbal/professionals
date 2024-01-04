@@ -9,6 +9,7 @@ const FindCounselling = () => {
   const usersProfileData = location.state.usersProfileData
   const loading = location.state.loading
   const pictureLink = location.state.pictureLink
+  const selectedLocation = location.state.selectedLocation
 console.log("usersProfileData", usersProfileData)
   if (loading && !usersProfileData){
     return <h1>Loading ...</h1>
@@ -19,6 +20,7 @@ console.log("usersProfileData", usersProfileData)
         therapists={usersProfileData}
         pictureLink={pictureLink}
         loading={loading}
+        selectedLocation={selectedLocation}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField, Link, Typography, Container, CssBaseline, Grid, Box, FormHelperText, Paper, Alert,} from "@mui/material";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
@@ -8,6 +8,7 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { postRequest } from "../../backendservices/ApiCalls";
 import { LoadingButton } from "@mui/lab";
 import { useMyContext } from "../../components/context-user-data/ContextUserData";
+import AlertDialog from "../../components/AlertDiaolog/Alertdialog";
 
 const validationSchema = yup.object({
   email: yup
@@ -21,8 +22,14 @@ const Login = () => {
   const { setLoginUserData, refreshUserData } = useMyContext();
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [signupAlert, setSignUpAlert] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [userID, setUserID]= useState('')
   const navigate = useNavigate();
-  
+  const handleCloseSignUp = () => {
+    setSignUpAlert(false);
+};
+
   const handleSubmit = (data, resetForm, setSubmitting) => {
     let params = {
       email: data.email,
@@ -32,45 +39,63 @@ const Login = () => {
       "/login",
       params,
       (response) => {
-        console.log("login",response)
+        setIsLoading(true);
+
+        console.log("login",response?.data?.user?.userid)
+        setUserID(response?.data?.user?.userid);
         localStorage.setItem("token", response?.data?.token);
         if (response?.data?.status === "success") {
           console.log("data added successfully");
+          setIsLoading(false);
           resetForm();
           setIsSubmitted(true);
           setSubmitting(true);
           setLoginUserData(response?.data?.user);
           refreshUserData();
-
+         
           setTimeout(() => {
             setIsSubmitted(false);
-            navigate("/dash-board", {
+            navigate("/dashboard", {
               state: {
                 useremail: data.email,
+                userID:userID,
+                isLoadings:isLoading
               },
             });
-          }, 1000);
+          }, 2000);
         } else if (response?.data?.status === "error") {
           
-          alert(response?.data?.message || "Login failed"); // Display the error message received from the server
-          navigate("/login");
+          // alert(response?.data?.message || "Login failed"); // Display the error message received from the server
+          // navigate("/login");
+          setSignUpAlert(true);
           setIsSubmitted(false);
           setSubmitting(false);
+          setIsLoading(false)
+
         }
       },
       (error) => {
         console.log(error?.response?.data);
         setIsSubmitted(false);
         setSubmitting(false);
+        setIsLoading(false)
+
       }
     );
   };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, []);
+  
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-        <img src={logo} alt="logo header" style={{ width: "15%" }} />
-      </Box>
+      {/* <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <img src={logo} alt="logo header"  />
+      </Box> */}
       <Grid container sm={4} margin={"auto"} textAlign={"center"}
         // component="main"
         sx={{
@@ -162,7 +187,7 @@ const Login = () => {
             </Formik>
 
             <Grid container sx={{display:"flex", flexDirection:"column"}}>
-              <Grid item>
+              {/* <Grid item>
                 <Link
                   href="#"
                   sx={{
@@ -173,7 +198,7 @@ const Login = () => {
                 >
                   Forgot your password?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item p={3}>
                 {" "}
                 Don't have an account?
@@ -185,6 +210,8 @@ const Login = () => {
           </Div>
         </Paper>
       </Grid>
+      <AlertDialog handleClose={handleCloseSignUp} open={signupAlert}  content="username or password is incorrect!" disableScrollLock={true}/>
+
     </>
   );
 };

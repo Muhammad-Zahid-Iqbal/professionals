@@ -99,7 +99,7 @@ const Appbarlogin = (props) => {
               <Button sx={{ color: "#fff", m: 2 }} to="/counselling" component={Link}> New </Button>
               <Button sx={{ color: "#fff", m: 2 }} to="/sign-up" component={Link}>Join US</Button>
               <Button sx={{ color: "#fff", m: 2 }}>Location</Button> */}
-              <Button sx={{ m: 1, color: "#ee7925", backgroundColor: "#fff", "&:hover": { backgroundColor: "#ee7925", borderColor: "#ee7925", color: "#fff",},}} variant="outlined" startIcon={<LocationOnIcon />} onClick={() =>navigate('/counselling')}> Find your nearest tutors and assessors</Button>
+              <Button sx={{ m: 1, color: "#ee7925", backgroundColor: "#fff", "&:hover": { backgroundColor: "#ee7925", borderColor: "#ee7925", color: "#fff",},}} variant="outlined" startIcon={<LocationOnIcon />} onClick={() =>navigate('/Tutors & Assessors')}> Find your nearest tutors and assessors</Button>
             </Box>
             <Button sx={{ m: 1, color: "#ee7925", backgroundColor: "#fff", width:"80px", "&:hover": { backgroundColor: "#ee7925", borderColor: "#ee7925", color: "#fff",},}} variant="contained" onClick={handleLoginLogout}>
               {localStorage.getItem("token") !== null ? "Logout" : "Login"}

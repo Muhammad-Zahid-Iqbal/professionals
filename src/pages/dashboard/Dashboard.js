@@ -1,7 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { ErrorMessage, Field, Form, Formik} from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Grid, TextField, Button, Box, FormHelperText, IconButton, Avatar, Select, MenuItem, InputLabel, FormControl,} from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Button,
+  Box,
+  FormHelperText,
+  IconButton,
+  Avatar,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Rating,
+  Typography,
+} from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { postRequest } from "../../backendservices/ApiCalls";
 import { useLocation } from "react-router-dom";
@@ -11,40 +25,46 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Alertdialog from "../../components/AlertDiaolog/Alertdialog";
 import Div from "../../shared/Div";
 import CopyLink from "./CopyLink";
+import { Card } from "@mui/joy";
+import StarIcon from "@mui/icons-material/Star";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
   education: Yup.string().required("Education is required"),
   phone: Yup.string().required("Phone is required"),
   city: Yup.string().required("City is required"),
-  address: Yup.string().required('Address is required'),
-  postcode: Yup.number().required('Post Code is required'),
+  address: Yup.string().required("Address is required"),
+  postcode: Yup.number().required("Post Code is required"),
 });
 
 const Dashboard = () => {
   const [ckeditorContent, setCkeditorContent] = useState("");
   const [open, setOpen] = React.useState(false);
   const [load, setLoad] = React.useState(true);
- 
-  const { loginUserData, getUserData, loading, refreshUserData,userprofile} = useMyContext();
-  const [selectedImage, setSelectedImage] = useState('');
+  const [reviewData, setReviewData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    loginUserData,
+    loading,
+    userprofile,
+    setLoading,
+  } = useMyContext();
+  const [selectedImage, setSelectedImage] = useState("");
   const rowData = loginUserData;
 
   const [selectedLocation, setSelectedLocation] = React.useState();
   const location = useLocation();
 
   const useremail = location?.state?.useremail;
- 
 
   useEffect(() => {
     if (userprofile !== null) {
       setSelectedImage(userprofile);
     }
     setLoad(false);
-    
-  },[userprofile]);
+  }, [userprofile]);
 
-  console.log("selectedImage",selectedImage)
   const handleChangeSelect = (event) => {
     // setSelectedLocation(event.target.value);
   };
@@ -52,7 +72,15 @@ const Dashboard = () => {
     setOpen(false);
   };
 
+  const formatPhoneNumber = (value) => {
+    // Remove non-numeric characters
+    const phoneNumber = value.replace(/\D/g, "");
 
+    // Add the country code (you can customize this based on your needs)
+    const formattedPhoneNumber = `+92 ${phoneNumber}`;
+
+    return formattedPhoneNumber;
+  };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
 
@@ -70,16 +98,19 @@ const Dashboard = () => {
             "/updateprofilepicture",
             params,
             (response) => {
-              console.log("responseImage", response)
+              console.log("responseImage", response);
               if (response?.data?.status === "success") {
-                setSelectedImage(response?.data?.pictureurl)
+                setLoading(true);
+                setSelectedImage(response?.data?.pictureurl);
                 console.log("data added successfully");
+                setLoading(false);
               } else {
                 console.log("response not getting");
               }
             },
             (error) => {
               console.log(error?.response?.data);
+              setLoading(false);
             }
           );
           console.log("Image loaded successfully!", base64Data);
@@ -91,21 +122,45 @@ const Dashboard = () => {
       reader.readAsDataURL(file);
     }
   };
-  
+
   const handleCameraClick = () => {
     document.getElementById("fileInput").click();
   };
+  const GetReviews = () => {
+    let param = {
+      userid: rowData?.userid,
+    };
+    postRequest(
+      "/getreviews",
+      param,
+      (response) => {
+        setIsLoading(true);
+        if (response?.data?.status === "success") {
+          setReviewData(response?.data?.data);
+        }
+        setIsLoading(false);
+      },
+      (error) => {
+        console.log(error?.response?.data);
+        setIsLoading(false);
+      }
+    );
+  };
+
+  useEffect(() => {
+    GetReviews();
+  }, [rowData?.userid]);
 
   const handleSubmit = (data, setSubmitting, resetForm) => {
     let params = {
       // image: selectedImage,
       education: data.education,
       user_type: data.type,
-      email: useremail,
+      email: useremail || data.email,
       mobile: data.phone,
       city: data.city,
       detail: ckeditorContent,
-      address:data.address,
+      address: data.address,
       postcode: data.postcode,
     };
     postRequest(
@@ -125,6 +180,11 @@ const Dashboard = () => {
       }
     );
   };
+  useEffect(() => {
+    // Initialize CKEditor content with data from API
+    setCkeditorContent(rowData?.detail || "");
+  }, [rowData]);
+
   const handleCkeditorChange = (event, editor) => {
     const data = editor.getData();
     setCkeditorContent(data);
@@ -142,12 +202,12 @@ const Dashboard = () => {
           initialValues={{
             // image: selectedImage,
             name: rowData?.firstname || "",
-            email: useremail || "",
+            email: useremail || rowData?.email || "",
             education: rowData?.education || "",
             type: rowData?.user_type || "",
             phone: rowData?.mobile || "",
             city: rowData?.city || "",
-            detail: rowData?.detail || "",
+            // detail: rowData?.detail || "",
             address: rowData?.address || "",
             postcode: rowData?.postcode || "",
           }}
@@ -158,7 +218,7 @@ const Dashboard = () => {
         >
           {({ setFieldValue }) => (
             <Form>
-              <CopyLink userLoginID={rowData?.userid}/>
+              <CopyLink userLoginID={rowData?.userid} reviewData={reviewData}  userID={rowData?.userid}/>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} sx={{ margin: "auto" }}>
                   <Div>
@@ -294,7 +354,7 @@ const Dashboard = () => {
                             value={selectedLocation || rowData?.user_type}
                             label="Type"
                             onChange={(event) => {
-                              handleChangeSelect(event);
+                              // handleChangeSelect(event);
                               setFieldValue("type", event.target.value); // Update the Formik field
                               setSelectedLocation(event.target.value);
                             }}
@@ -311,17 +371,22 @@ const Dashboard = () => {
                         <Field
                           id="phone"
                           name="phone"
-                          type="number"
-                          as={TextField}
-                          fullWidth
-                          label="Phone"
-                          helperText={
-                            <FormHelperText
-                              sx={{ color: "red", m: 0, fontSize: "16px" }}
-                            >
-                              <ErrorMessage name="phone" />
-                            </FormHelperText>
-                          }
+                          type="tel"
+                          parse={formatPhoneNumber} // This function formats the phone number when parsing
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              fullWidth
+                              label="Phone"
+                              helperText={
+                                <FormHelperText
+                                  sx={{ color: "red", m: 0, fontSize: "16px" }}
+                                >
+                                  <ErrorMessage name="phone" />
+                                </FormHelperText>
+                              }
+                            />
+                          )}
                         />
                       </Box>
                     </Grid>
@@ -390,7 +455,8 @@ const Dashboard = () => {
                     <CKEditor
                       editor={ClassicEditor}
                       className="ck-editor__editable"
-                      data={rowData?.detail || "Detail start here"}
+                      // data={rowData?.detail || ""}
+                      data={ckeditorContent}
                       onInit={(editor) => {
                         editor.editing.view.change((writer) => {
                           writer.setStyle(
@@ -406,7 +472,6 @@ const Dashboard = () => {
                     />
                   </Box>
 
-
                   <Box mb={3} pl={2} pr={2}>
                     <Button
                       type="submit"
@@ -418,7 +483,7 @@ const Dashboard = () => {
                         borderRadius: "15px",
                       }}
                     >
-                      Signup
+                      Update
                     </Button>
                   </Box>
                 </Grid>
@@ -426,7 +491,52 @@ const Dashboard = () => {
             </Form>
           )}
         </Formik>
-        <Alertdialog open={open} handleClose={handleClose} content="Your Profile data has been updated Successfully!" />
+        <Grid container sm={10} xs={12} margin={"auto"} sx={{marginBottom:"25px"}}>
+          <Card sx={{ width: "100%" }}>
+            <h3>Reviews: </h3>
+          </Card>
+          {!isLoading &&
+            reviewData?.map(
+              (row) =>
+                row.userid === rowData?.userid && (
+                  <Card key={row?.id} sx={{ width: "100%" }}>
+                    <Rating
+                      name="text-feedback"
+                      value={row?.rating}
+                      readOnly
+                      precision={0.5}
+                      emptyIcon={
+                        <StarIcon
+                          style={{ opacity: 0.55 }}
+                          fontSize="inherit"
+                        />
+                      }
+                    />
+                    <Typography variant="h5" component="div">
+                      {row?.sender_name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "17px",
+                        fontFamily:
+                          "Proxima Nova,Open Sans,Helvetica Neue,Arial,sans-serif",
+                      }}
+                      dangerouslySetInnerHTML={{
+                        __html: row?.detail
+                          .replace(/\\n/g, "")
+                          .replace(/\\/g, ""),
+                      }}
+                    />
+                  </Card>
+                )
+            )}
+        </Grid>
+
+        <Alertdialog
+          open={open}
+          handleClose={handleClose}
+          content="Your Profile data has been updated Successfully!"
+        />
       </>
     );
   }

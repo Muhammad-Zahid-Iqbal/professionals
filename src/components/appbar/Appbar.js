@@ -44,7 +44,7 @@ const Appbar = (props) => {
   };
   const handleButtonClick = () => {
     // Navigate to the appropriate page when the button is clicked
-    navigate("/dash-board");
+    navigate("/dashboard");
   };
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
@@ -163,10 +163,10 @@ const Appbar = (props) => {
               startIcon={
                 <LocationOnIcon sx={{ marginRight: { sm: 0, xs: 2 } }} />
               }
-              onClick={() => navigate("/counselling")}
+              onClick={() => navigate("/Tutors-Assessors")}
             >
               {" "}
-              Find your nearest tutors and assessors
+              Find a Qualified Dyslexia Tutors or Assessors near you
             </Button>
           </Box>
           {!isMobile && (
@@ -175,7 +175,7 @@ const Appbar = (props) => {
             m: 1,
             color: "#ee7925",
             backgroundColor: "#fff",
-            width: "80px",
+            // width: "150px",
             "&:hover": {
               backgroundColor: "#ee7925",
               borderColor: "#ee7925",
@@ -185,7 +185,7 @@ const Appbar = (props) => {
           variant="contained"
           onClick={handleLoginLogout}
         >
-          {localStorage.getItem("token") !== null ? "Logout" : "Login"}
+          {localStorage.getItem("token") !== null ? "logout" : "professional login"}
         </Button>
       )}
         </Toolbar>

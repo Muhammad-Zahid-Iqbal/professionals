@@ -20,12 +20,12 @@ const Routing = () => {
         <Route path="/" element={<Findclass />} />
          <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<Signup />} />
-        <Route path="/counselling" element={<Counselling />} />
-        <Route path="/dash-board" element={<Dashboard />} />
+        <Route path="/Tutors-Assessors" element={<Counselling />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/user-detail/:id" element={<UserDetail />} />
         <Route path="/copy-link/:id" element={<CopyLink />} />
         <Route path="/user-review/:id" element={<UserReview />} />
-        <Route path="find-counselling" element={<FindCounselling />} />
+        <Route path="/Tutor.Assessors" element={<FindCounselling />} />
       </Routes>
     </Div>
   )
