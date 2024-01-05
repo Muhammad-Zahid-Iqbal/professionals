@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from "react";
 import Counsellingcard from "./Counsellingcard";
 import { postRequest } from "../../backendservices/ApiCalls";
+import { useLocation } from "react-router-dom";
 
 const Counselling = () => {
   const [usersProfileData, setUsersProfileData] = useState([]);
   const [pictureLink, setPictureLink] = useState();
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
+
+  const location = useLocation();
+
+  const usersProfileData1 = location.state?.usersProfileData || [];
+  const loading1 = location.state?.loading || false;
+  const pictureLink1 = location.state?.pictureLink || "";
+  const selectedLocation = location.state?.selectedLocation || "";
 
   const GetallUsers = () => {
     postRequest(
-      '/getallusers',
+      "/getallusers",
       "",
       (response) => {
-        console.log("getallusersRespons", response)
         setLoading(true);
-        if (response?.data?.status === 'success') {
+        if (response?.data?.status === "success") {
           setUsersProfileData(response?.data?.data);
           setPictureLink(response?.data?.profilePicLink);
         }
@@ -27,18 +34,26 @@ const Counselling = () => {
     );
   };
 
-  
   useEffect(() => {
     GetallUsers();
   }, []);
-  
+
   return (
     <>
-      <Counsellingcard
-        therapists={usersProfileData}
-        pictureLink={pictureLink}
-        loading={loading}
-      />
+      {selectedLocation === "Tutors" || selectedLocation === "Assessors" ? (
+        <Counsellingcard
+          therapists={usersProfileData1}
+          pictureLink={pictureLink1}
+          loading={loading1}
+          selectedLocation={selectedLocation}
+        />
+      ) : (
+        <Counsellingcard
+          therapists={usersProfileData}
+          pictureLink={pictureLink}
+          loading={loading}
+        />
+      )}
     </>
   );
 };

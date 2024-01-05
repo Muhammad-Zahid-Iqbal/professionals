@@ -9,11 +9,10 @@ import Div from "../../shared/Div";
 import { postRequest } from "../../backendservices/ApiCalls";
 import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
+import AverageRating from '../dashboard/AverageRating';
 
 const UserDetail = () => {
-  const [userID, setUserID] = React.useState("");
   const [reviewData, setReviewData] = useState([]);
-  console.log("reviewData", reviewData);
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const location = useLocation();
@@ -24,17 +23,7 @@ const UserDetail = () => {
   const user =
     therapists && therapists.find((user) => user.id === parseInt(id, 10));
 
-  const AverageRating = ({ value }) => {
-    return (
-      <Rating
-        name="average-rating"
-        value={value}
-        readOnly
-        precision={0.5}
-        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-      />
-    );
-  };
+ 
   const averageRating = () => {
     const totalRating = reviewData.reduce((sum, row) => sum + row.rating, 0);
     const average = totalRating / reviewData.length;

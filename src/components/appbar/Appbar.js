@@ -166,7 +166,7 @@ const Appbar = (props) => {
               onClick={() => navigate("/Tutors-Assessors")}
             >
               {" "}
-              Find a Qualified Dyslexia Tutors or Assessors near you
+              Find Qualified Dyslexia Tutors and Assessors
             </Button>
           </Box>
           {!isMobile && (

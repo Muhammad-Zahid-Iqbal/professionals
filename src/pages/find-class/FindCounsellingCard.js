@@ -147,7 +147,7 @@ const FindCounsellingCard = ({ therapists, loading, pictureLink,selectedLocation
       >
         <Grid container sm={10} xs={12} margin={"auto"}>
           <Div sx={{ padding: "20px" }}>
-            <h1>{selectedLocation? selectedLocation : "Tutors & Assessors"}</h1>
+            <h1>{selectedLocation? selectedLocation + " in London" : "Tutors & Assessors"}</h1>
           </Div>
           {therapists?.slice(startIndex, endIndex).map((value, index) => (
             <Card

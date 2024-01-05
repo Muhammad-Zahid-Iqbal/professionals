@@ -25,7 +25,7 @@ const Routing = () => {
         <Route path="/user-detail/:id" element={<UserDetail />} />
         <Route path="/copy-link/:id" element={<CopyLink />} />
         <Route path="/user-review/:id" element={<UserReview />} />
-        <Route path="/Tutor.Assessors" element={<FindCounselling />} />
+        {/* <Route path="/Tutor.Assessors" element={<FindCounselling />} /> */}
       </Routes>
     </Div>
   )

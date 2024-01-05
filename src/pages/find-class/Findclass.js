@@ -61,13 +61,11 @@ const Findclass = () => {
       "/getsearchdata",
       params,
       (response) => {
-        console.log("getsearchdataRes", response);
         if (response?.data?.status === "success") {
           setLoading(true);
           setUsersProfileData(response?.data?.data);
           setPictureLink(response?.data?.profilePicLink);
           setLoading(false);
-          console.log("State after setting data:", usersProfileData, loading);
           if (response?.data?.data?.length === 0) {
             // No data found for the entered city
             setSignUpAlert(true);
@@ -88,10 +86,9 @@ const Findclass = () => {
       }
     );
   };
-  console.log("usersProfileData", usersProfileData);
   useEffect(() => {
     if (usersProfileData.length > 0) {
-      navigate("/Tutor.Assessors", {
+      navigate("/Tutors-Assessors", {
         state: {
           usersProfileData,
           loading,
@@ -136,7 +133,7 @@ const Findclass = () => {
                     "Buenos Aires, Pulp, OpenSans, 'Open Sans', sans-serif",
                 }}
               >
-                Find a Qualified Dyslexia Tutors or Assessors near you
+                Find Qualified Dyslexia Tutors and Assessors
               </Typography>
               <Typography
                 sx={{

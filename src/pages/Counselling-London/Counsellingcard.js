@@ -13,7 +13,7 @@ import { postRequest } from "../../backendservices/ApiCalls";
 import CancelIcon from '@mui/icons-material/Cancel';
 
 
-const Counsellingcard = ({ therapists, loading, pictureLink }) => {
+const Counsellingcard = ({ therapists, loading, pictureLink, selectedLocation,  }) => {
   const maxDetailLength = 400;
   const itemsPerPage = 5;
   const maxDisplayedPages = 10;
@@ -29,7 +29,7 @@ const Counsellingcard = ({ therapists, loading, pictureLink }) => {
   const user =
     therapists && therapists.find((user) => user.id === parseInt(userID, 10));
   const handleClose = () => setOpen(false);
-console.log("user", user)
+console.log("therapists", therapists)
   const navigate = useNavigate();
 
   const totalPages = Math.ceil(therapists?.length / itemsPerPage);
@@ -127,7 +127,7 @@ console.log("user", user)
     GetReviews();
   }, [userID]);
 
-  if ( loading && !therapists) {
+  if ( !therapists || loading) {
     return <h1>Loading ...</h1>;
   }
 
@@ -146,8 +146,8 @@ console.log("user", user)
         }}
       >
         <Grid container sm={10} xs={12} margin={"auto"}>
-          <Div sx={{ padding: "20px" }}>
-            <h1>Tutors & Assessors</h1>
+        <Div sx={{ padding: "20px" }}>
+            <h1>{selectedLocation? selectedLocation + " in London" : "Tutors & Assessors"}</h1>
           </Div>
           {therapists?.slice(startIndex, endIndex).map((value, index) => (
             <Card
