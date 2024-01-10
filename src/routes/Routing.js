@@ -11,6 +11,7 @@ import UserDetail from '../pages/Counselling-London/UserDetail'
 import CopyLink from '../pages/dashboard/CopyLink'
 import UserReview from '../pages/Counselling-London/UserReview'
 import FindCounselling from '../pages/find-class/FindCounselling'
+import Usertable from '../pages/User-Table/Usertable'
 
 const Routing = () => {
   return (
@@ -25,6 +26,7 @@ const Routing = () => {
         <Route path="/user-detail/:id" element={<UserDetail />} />
         <Route path="/copy-link/:id" element={<CopyLink />} />
         <Route path="/user-review/:id" element={<UserReview />} />
+        <Route path="/user-table" element={<Usertable />} />
         {/* <Route path="/Tutor.Assessors" element={<FindCounselling />} /> */}
       </Routes>
     </Div>

@@ -40,7 +40,7 @@ const Findclass = () => {
 
   const handleCloseSignUp = () => {
     setSignUpAlert(false);
-};
+  };
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 480);
@@ -93,7 +93,7 @@ const Findclass = () => {
           usersProfileData,
           loading,
           pictureLink,
-          selectedLocation
+          selectedLocation,
         },
       });
     }
@@ -101,7 +101,7 @@ const Findclass = () => {
 
   return (
     <>
-      <Box sx={{ background: "#f2f2f2" }}>
+      <Box sx={{ background: "#f2f2f2", }}>
         <Grid container sx={{ minHeight: "700px" }}>
           <Grid item sm={6} xs={12}>
             <Grid
@@ -137,7 +137,6 @@ const Findclass = () => {
               </Typography>
               <Typography
                 sx={{
-                  
                   alignItem: "center",
                   fontSize: "20px",
                   fontWeight: 600,
@@ -145,21 +144,22 @@ const Findclass = () => {
                   paddingTop: "2%",
                 }}
               >
-                 Dyslexia Focus provides you with the ability to search for qualified and experienced Tutors and Assessors in your area 
+                Dyslexia Focus provides you with the ability to search for
+                qualified and experienced Tutors and Assessors in your area
               </Typography>
               <Typography
                 sx={{
-                  
                   alignItem: "center",
                   fontSize: "16px",
                   fontWeight: 500,
                   paddingLeft: "15%",
                   paddingTop: "2%",
-                  marginTop:"8%",
-                  color:"gray"
+                  marginTop: "8%",
+                  color: "gray",
                 }}
               >
-                 Simply select which service you require & type in your postcode to search Assessors and Tutors near you 
+                Simply select which service you require & type in your postcode
+                to search Assessors and Tutors near you
               </Typography>
             </Grid>
             <Formik
@@ -205,8 +205,7 @@ const Findclass = () => {
                         <MenuItem value="Assessors">Assessors</MenuItem>
                       </Select>
                     </FormControl>
-                    {isMobile ? // This will render when the screen width is 480 pixels or less
-                    null : (
+                    {isMobile ? null : ( // This will render when the screen width is 480 pixels or less
                       // This will render when the screen width is greater than 480 pixels
                       <div
                         style={{
@@ -358,8 +357,12 @@ const Findclass = () => {
           }
         `}
       </style>
-      <AlertDialog handleClose={handleCloseSignUp} open={signupAlert}  content="Postcode not found. Please enter a valid Postcode!" disableScrollLock={true}/>
-
+      <AlertDialog
+        handleClose={handleCloseSignUp}
+        open={signupAlert}
+        content="Postcode not found. Please enter a valid Postcode!"
+        disableScrollLock={true}
+      />
     </>
   );
 };
