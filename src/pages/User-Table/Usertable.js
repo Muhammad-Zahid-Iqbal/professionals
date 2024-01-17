@@ -37,7 +37,7 @@ const columns = [
   {
     field: "delete",
     headerName: "Delete",
-    width: 200,
+    width: 80,
     renderCell: (params) => (
       <DeleteIcon
         // onClick={() => handleDelete(params.row.id)}
