@@ -7,7 +7,6 @@ const Counselling = () => {
   const [usersProfileData, setUsersProfileData] = useState([]);
   const [pictureLink, setPictureLink] = useState();
   const [loading, setLoading] = useState(false);
-
   const location = useLocation();
 
   const usersProfileData1 = location.state?.usersProfileData || [];
