@@ -59,13 +59,7 @@ const rows = [
 ];
 const Usertable = () => {
   return (
-    <Grid
-      container
-      fullWidth
-      marginTop={4}
-      alignItems="center"
-      justifyContent="center"
-    >
+    <Grid container fullWidth marginTop={4} alignItems="center" justifyContent="center">
       <Grid item sm={9} xs={12}>
         <Typography sx={{fontSize:"25px", textAlign:"center", padding:3}}>User Detail</Typography>
         <Box sx={{ height: 400, width: "100%" }}>
