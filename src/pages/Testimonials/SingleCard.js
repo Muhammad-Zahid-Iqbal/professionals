@@ -9,6 +9,7 @@ const SingleCard = ({ TestimonialData }) => {
       <Grid container sm={9} display={"flex"} justifyContent={"center"} margin={"auto"} paddingBottom={"65px"}>
         
         {TestimonialData.map((testimonial, index) => (
+          
           <Grid item key={index} sm={4} xs={12} pb={4} pr={2} pl={2}>
             <Card>
               <Box sx={{ display: "flex" }}>
