@@ -64,7 +64,6 @@ const Login = () => {
             });
           }, 2000);
         } else if (response?.data?.status === "error") {
-          
           // alert(response?.data?.message || "Login failed"); // Display the error message received from the server
           // navigate("/login");
           setSignUpAlert(true);
