@@ -6,7 +6,7 @@ function updateAuthorizationHeader() {
     const token = localStorage.getItem('token');
     axios.defaults.headers.common['authorization'] = 'Bearer ' + token;
   }
-  //
+  
   export function authUserData(callback, errorCallback) {
     updateAuthorizationHeader();
   
